@@ -25,24 +25,16 @@ fun Application.configureRouting() {
         get("/helloWorld") {
             call.respondText("Hello World!")
         }
-        get<TeamRessource> { teams ->
-            teamController.getAllTeams()
-            val list = listOf(
-                TeamDTO(1, "A", "no real"),
-                TeamDTO(2, "B", "no real")
-            )
-            call.respond(list)
+        get<TeamRessource> {
+            call.respond(teamController.getAllTeams())
         }
-        get<TeamRessource.Id> { team ->
-            when (team.id) {
-                1 -> call.respond(TeamDTO(1, "A", "no real"))
-                2 -> call.respond(TeamDTO(2, "B", "no real"))
-                else -> call.respond(HttpStatusCode.NotFound)
-            }
+        get<TeamRessource.Id> { 
+            call.respond(teamController.getTeamById(it.id))
         }
-        postR<TeamRessource> { team ->
+        postR<TeamRessource> { 
             val teamDTO = call.receive<TeamDTO>()
-            
+            teamController.createTeam(teamDTO)
+            call.respond(HttpStatusCode.Created)
         }
     }
 }
