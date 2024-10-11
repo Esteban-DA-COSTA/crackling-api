@@ -25,7 +25,8 @@ class TeamController(private val application: Application) {
                     _links.putAll(
                         mapOf(
                             "self" to HateoasLink(GET, application.href(TeamRessource.Id(id = it.id.value))),
-                            "edit" to HateoasLink(PUT, application.href(TeamRessource.Id(id = it.id.value)))
+                            "edit" to HateoasLink(PUT, application.href(TeamRessource.Id(id = it.id.value))),
+                            "delete" to HateoasLink(DELETE, application.href(TeamRessource.Id(id = it.id.value)))
                         )
                     )
                 }
@@ -51,7 +52,8 @@ class TeamController(private val application: Application) {
             _links.putAll(
                 mapOf(
                     "self" to HateoasLink(GET, application.href(TeamRessource.Id(id = this.id!!))),
-                    "edit" to HateoasLink(PUT, application.href(TeamRessource.Id(id = this.id)))
+                    "edit" to HateoasLink(PUT, application.href(TeamRessource.Id(id = this.id))),
+                    "delete" to HateoasLink(DELETE, application.href(TeamRessource.Id(id = this.id)))
                 )
             )
         }
@@ -68,7 +70,8 @@ class TeamController(private val application: Application) {
             _links.putAll(
                 mapOf(
                     "self" to HateoasLink(GET, application.href(TeamRessource.Id(id = this.id!!))),
-                    "edit" to HateoasLink(PUT, application.href(TeamRessource.Id(id = this.id)))
+                    "edit" to HateoasLink(PUT, application.href(TeamRessource.Id(id = this.id))),
+                    "delete" to HateoasLink(DELETE, application.href(TeamRessource.Id(id = this.id)))
                 )
             )
         }
@@ -90,7 +93,8 @@ class TeamController(private val application: Application) {
             _links.putAll(
                 mapOf(
                     "self" to HateoasLink(GET, application.href(TeamRessource.Id(id = id))),
-                    "edit" to HateoasLink(PUT, application.href(TeamRessource.Id(id = id)))
+                    "edit" to HateoasLink(PUT, application.href(TeamRessource.Id(id = id))),
+                    "delete" to HateoasLink(DELETE, application.href(TeamRessource.Id(id = id)))
                 )
             )
         }
@@ -119,5 +123,9 @@ class TeamController(private val application: Application) {
         }
     }
     //#endregion
+    
+    fun deleteTeam(id: Int) = transaction {
+        TeamEntity[id].delete()
+    }
 
 }
