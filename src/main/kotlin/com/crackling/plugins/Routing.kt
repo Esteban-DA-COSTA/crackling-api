@@ -22,7 +22,7 @@ fun Application.configureRouting() {
         }
     }
     routing {
-        val teamController = TeamController()
+        val teamController = TeamController(this@configureRouting)
         get("/helloWorld") {
             call.respondText("Hello World!")
         }

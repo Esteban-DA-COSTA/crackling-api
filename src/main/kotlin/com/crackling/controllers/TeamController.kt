@@ -3,16 +3,30 @@ package com.crackling.controllers
 import com.crackling.databases.dtos.TeamDTO
 import com.crackling.databases.entities.TeamEntity
 import com.crackling.databases.tables.Teams
+import com.crackling.resources.HateoasLink
+import com.crackling.resources.HttpVerb
+import com.crackling.resources.TeamRessource
+import io.ktor.server.application.*
+import io.ktor.server.resources.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import com.crackling.resources.HttpVerb.*
 
-class TeamController {
+class TeamController(private val application: Application) {
     //#region GET
     /**
      * Retrieves all teams from the database.
      *
      * @return a list of TeamDTO representing all teams.
      */
-    fun getAllTeams(): List<TeamDTO> = transaction { TeamEntity.all().map { it.toDTO() } }
+    fun getAllTeams(): List<TeamDTO> = transaction { 
+        TeamEntity.all().map {
+            val dto = it.toDTO()
+            generateHateoasLinks(dto,
+                "self" to HateoasLink(GET, application.href(TeamRessource.Id(id = it.id.value))),
+                "edit" to HateoasLink(PUT, application.href(TeamRessource.Id(id = it.id.value)))
+            )
+        }
+    }
 
     /**
      * Retrieves a team from the database by its name.
@@ -58,5 +72,11 @@ class TeamController {
             it.description = team.description
         }
     }
-
+    //#endregion
+    
+    private fun generateHateoasLinks(dto: TeamDTO, vararg links: Pair<String, HateoasLink>): TeamDTO {
+        val linksToAdd = mapOf(*links)
+        dto._links.putAll(linksToAdd)
+        return dto
+    }
 }
