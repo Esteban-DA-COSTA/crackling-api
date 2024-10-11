@@ -11,6 +11,7 @@ import io.ktor.server.resources.*
 import io.ktor.server.resources.Resources
 import io.ktor.server.response.*
 import io.ktor.server.resources.post as postR
+import io.ktor.server.resources.put as putR
 import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
@@ -26,7 +27,10 @@ fun Application.configureRouting() {
             call.respondText("Hello World!")
         }
         get<TeamRessource> {
-            call.respond(teamController.getAllTeams())
+            if (it.name != null) 
+                call.respond(teamController.getTeamByName(it.name))
+            else
+                call.respond(teamController.getAllTeams())
         }
         get<TeamRessource.Id> { 
             call.respond(teamController.getTeamById(it.id))
@@ -34,7 +38,12 @@ fun Application.configureRouting() {
         postR<TeamRessource> { 
             val teamDTO = call.receive<TeamDTO>()
             teamController.createTeam(teamDTO)
-            call.respond(HttpStatusCode.Created)
+            call.respond(HttpStatusCode.Created, teamDTO)
+        }
+        putR<TeamRessource.Id> { 
+            val teamDTO = call.receive<TeamDTO>()
+            teamController.updateTeam(it.id, teamDTO)
+            call.respond(HttpStatusCode.OK, teamDTO)
         }
     }
 }

@@ -7,7 +7,7 @@ import io.ktor.server.resources.*
 
 
 @Resource("/teams")
-class TeamRessource(val description: String? = null) {
+class TeamRessource(val name: String? = null) {
     
     @Resource("{id}")
     class Id(val parent: TeamRessource = TeamRessource(), val id: Int)

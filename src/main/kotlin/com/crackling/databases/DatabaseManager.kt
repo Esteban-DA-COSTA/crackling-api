@@ -1,17 +1,22 @@
 package com.crackling.databases
 
 import com.crackling.databases.tables.Teams
+import io.ktor.server.config.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseManager {
-    private val db = Database.connect(
-        url = "jdbc:sqlserver://192.168.1.100:1433;database=crackling",
-        user = "crackling_user",
-        driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-        password = "cr@ssword",
-    )
+    private lateinit var db: Database
+    
+    fun connection(config: ApplicationConfig) {
+        db = Database.connect(
+            url = config.property("database.url").getString(),
+            user = config.property("database.username").getString(),
+            password = config.property("database.password").getString(),
+            driver = config.property("database.driver").getString(),
+        )
+    }
     
     fun createTables() {
         transaction {
