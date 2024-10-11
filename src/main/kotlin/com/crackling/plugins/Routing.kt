@@ -6,6 +6,7 @@ import com.crackling.resources.TeamRessource
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.plugins.swagger.*
 import io.ktor.server.request.*
 import io.ktor.server.resources.*
 import io.ktor.server.resources.Resources
@@ -23,6 +24,8 @@ fun Application.configureRouting() {
     }
     routing {
         val teamController = TeamController(this@configureRouting)
+        
+        swaggerUI("/docs", "crackling_api_spec.yaml")
         get("/helloWorld") {
             call.respondText("Hello World!")
         }
