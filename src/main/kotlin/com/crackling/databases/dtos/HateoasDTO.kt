@@ -3,6 +3,6 @@ package com.crackling.databases.dtos
 import com.crackling.resources.HateoasLinks
 
 
-interface HatoasDTO {
+interface HateoasDTO {
     val _links: HateoasLinks
 }
