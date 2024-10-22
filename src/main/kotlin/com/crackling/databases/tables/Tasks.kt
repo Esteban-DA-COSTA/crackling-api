@@ -7,4 +7,5 @@ object Tasks: IntIdTable() {
     val description = varchar("description", 255)
     val completed = bool("completed")
     val teamId = reference("teamId", Teams)
+    val userPoints = integer("userPoints")
 }
