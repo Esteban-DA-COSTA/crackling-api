@@ -13,6 +13,7 @@ class TaskEntity(id: EntityID<Int>) : IntEntity(id) {
     var description by Tasks.description
     var completed by Tasks.completed
     var team by TeamEntity referencedOn Tasks.teamId
+    var userPoints by Tasks.userPoints
 
     fun toDTO(addTeam: Boolean = false) = TaskDTO(name, description, completed, if (addTeam) team.toDTO() else null)
 }
