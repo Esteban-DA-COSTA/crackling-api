@@ -1,6 +1,7 @@
 package com.crackling.databases
 
 import com.crackling.databases.tables.Teams
+import com.crackling.databases.tables.Users
 import io.ktor.server.config.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -21,6 +22,7 @@ object DatabaseManager {
     fun createTables() {
         transaction {
             SchemaUtils.create(Teams)
+            SchemaUtils.create(Users)
         }
     }
 }

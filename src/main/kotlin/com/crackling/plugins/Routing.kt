@@ -1,18 +1,12 @@
 package com.crackling.plugins
 
-import com.crackling.controllers.TeamController
-import com.crackling.databases.dtos.TeamDTO
-import com.crackling.resources.TeamRessource
 import com.crackling.routing.configureTeamRouting
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.plugins.swagger.*
-import io.ktor.server.request.*
-import io.ktor.server.resources.*
 import io.ktor.server.resources.Resources
 import io.ktor.server.response.*
-
 import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
