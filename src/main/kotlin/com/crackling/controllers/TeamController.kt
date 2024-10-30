@@ -66,14 +66,18 @@ class TeamController(private val application: Application) {
      * @return A TeamDTO representing the team found by ID.
      */
     fun getTeamById(id: Int) = transaction {
+        try {
         TeamEntity[id].toDTO().apply {
-            _links.putAll(
-                mapOf(
-                    "self" to HateoasLink(GET, application.href(TeamRessource.Id(id = this.id!!))),
-                    "edit" to HateoasLink(PUT, application.href(TeamRessource.Id(id = this.id))),
-                    "delete" to HateoasLink(DELETE, application.href(TeamRessource.Id(id = this.id)))
+                _links.putAll(
+                    mapOf(
+                        "self" to HateoasLink(GET, application.href(TeamRessource.Id(id = this.id!!))),
+                        "edit" to HateoasLink(PUT, application.href(TeamRessource.Id(id = this.id))),
+                        "delete" to HateoasLink(DELETE, application.href(TeamRessource.Id(id = this.id)))
+                    )
                 )
-            )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
     //#endregion

@@ -1,5 +1,6 @@
 package com.crackling.databases
 
+import com.crackling.databases.tables.Members
 import com.crackling.databases.tables.Teams
 import com.crackling.databases.tables.Users
 import io.ktor.server.config.*
@@ -23,6 +24,7 @@ object DatabaseManager {
         transaction {
             SchemaUtils.create(Teams)
             SchemaUtils.create(Users)
+            SchemaUtils.create(Members)
         }
     }
 }
