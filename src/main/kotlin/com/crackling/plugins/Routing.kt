@@ -1,5 +1,6 @@
 package com.crackling.plugins
 
+import com.crackling.routing.configureMemberRouting
 import com.crackling.routing.configureTeamRouting
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -24,5 +25,6 @@ fun Application.configureRouting() {
             call.respondText("Hello World!")
         }
         configureTeamRouting()
+        configureMemberRouting()
     }
 }

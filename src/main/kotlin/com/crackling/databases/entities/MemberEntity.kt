@@ -1,5 +1,6 @@
 package com.crackling.databases.entities
 
+import com.crackling.databases.dtos.MemberDTO
 import com.crackling.databases.tables.Members
 import org.jetbrains.exposed.dao.CompositeEntity
 import org.jetbrains.exposed.dao.CompositeEntityClass
@@ -12,4 +13,9 @@ class MemberEntity(id: EntityID<CompositeID>): CompositeEntity(id) {
     var user by UserEntity referencedOn Members.user
     var team by TeamEntity referencedOn Members.team
     var role by Members.role
+    
+    fun toDTO(): MemberDTO = MemberDTO(user.toDTO(), team.toDTO(), role)
+    
+
+    operator fun invoke() = toDTO()
 }
