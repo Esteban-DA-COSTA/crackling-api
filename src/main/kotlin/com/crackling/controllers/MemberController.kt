@@ -7,7 +7,7 @@ import com.crackling.databases.tables.Members
 import com.crackling.resources.HateoasLink
 import com.crackling.resources.HttpVerb
 import com.crackling.resources.MemberRemoval
-import com.crackling.resources.MemberRessource
+import com.crackling.resources.MemberResource
 import com.crackling.resources.MemberRole
 import com.crackling.routing.payloads.MemberAddPayload
 import io.ktor.server.application.Application
@@ -17,7 +17,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
 class MemberController(private val application: Application) {
-    fun getMembersOfTeam(self: MemberRessource): ListMembersDTO = transaction {
+    fun getMembersOfTeam(self: MemberResource): ListMembersDTO = transaction {
         val teamId = self.parent.id
 
         val list = buildList<MemberDTO> {
@@ -29,7 +29,7 @@ class MemberController(private val application: Application) {
 
         // Member HATEOAS Links addition
         list.forEach { member ->
-            val selfResource = MemberRessource.Id(self, member.email)
+            val selfResource = MemberResource.Id(self, member.email)
             member._links.putAll(
                 mapOf(
                     "self" to HateoasLink(HttpVerb.GET, application.href(selfResource)),
@@ -42,14 +42,14 @@ class MemberController(private val application: Application) {
             _links.putAll(
                 mapOf(
                     "self" to HateoasLink(HttpVerb.GET, application.href(self)),
-                    "addMember" to HateoasLink(HttpVerb.POST, application.href(MemberRessource.Add(self)))
+                    "addMember" to HateoasLink(HttpVerb.POST, application.href(MemberResource.Add(self)))
                 )
             )
         }
         return@transaction memberList
     }
 
-    fun addMemberToTeam(self: MemberRessource.Add, member: MemberAddPayload) = transaction {
+    fun addMemberToTeam(self: MemberResource.Add, member: MemberAddPayload) = transaction {
         val teamId = self.parent.parent.id
         val memberId = CompositeID {
             it[Members.user] = member.email
@@ -61,7 +61,7 @@ class MemberController(private val application: Application) {
         }
     }
     
-    fun getMemberByEmail(self: MemberRessource.Id): MemberDTO = transaction {
+    fun getMemberByEmail(self: MemberResource.Id): MemberDTO = transaction {
         val email = self.email
         val teamResource = self.parent
             MemberEntity.find { Members.user eq email }.first().toDTO().apply { 
