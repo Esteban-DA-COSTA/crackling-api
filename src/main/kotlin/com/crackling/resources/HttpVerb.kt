@@ -13,4 +13,9 @@ enum class HttpVerb {
     TRACE,
     PATCH,
     CONNECT,
+    ;
+
+    infix fun on(url: String): HateoasLink {
+        return HateoasLink(this, url)
+    }
 }

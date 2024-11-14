@@ -6,6 +6,8 @@ object Tasks: IntIdTable() {
     val name = varchar("name", 255)
     val description = varchar("description", 255)
     val completed = bool("completed")
-    val teamId = reference("teamId", Teams)
+    val team = reference("team", Teams)
     val userPoints = integer("userPoints")
+    val assignee = optReference("assignee", Users)
+    
 }
