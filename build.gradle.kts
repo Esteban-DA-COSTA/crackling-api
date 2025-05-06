@@ -4,8 +4,8 @@ val exposed_version: String by project
 val ktor_version: String by project
 
 plugins {
-    kotlin("jvm") version "2.0.20"
-    id("io.ktor.plugin") version "3.0.0-rc-2"
+    kotlin("jvm") version "2.1.10"
+    id("io.ktor.plugin") version "3.1.0"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
 }
 
@@ -34,13 +34,14 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-swagger:$ktor_version")
+    implementation("io.ktor:ktor-server-config-yaml:$ktor_version")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("com.microsoft.sqlserver:mssql-jdbc:9.4.1.jre8")
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("ch.qos.logback:logback-classic:$logback_version")
-    
+
     testImplementation("io.ktor:ktor-server-test-host-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlin_version")
 }
