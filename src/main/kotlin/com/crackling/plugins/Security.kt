@@ -2,9 +2,12 @@ package com.crackling.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.plugins.cors.routing.CORS
 
 fun Application.configureSecurity() {
     // Read JWT configuration from application.yaml
@@ -26,5 +29,14 @@ fun Application.configureSecurity() {
                 if (credential.payload.audience.contains(jwtAudience)) JWTPrincipal(credential.payload) else null
             }
         }
+    }
+}
+
+fun Application.configureCORSPolicy() {
+    install(CORS) {
+        anyHost()
+        allowHeader(HttpHeaders.ContentType)
+        allowMethod(HttpMethod.Post)
+        allowMethod(HttpMethod.Patch)
     }
 }
