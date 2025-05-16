@@ -6,6 +6,7 @@ import com.crackling.databases.entities.TeamEntity
 import com.crackling.databases.tables.Teams
 import com.crackling.resources.HateoasLink
 import com.crackling.resources.HttpVerb.*
+import com.crackling.resources.MemberRessource
 import com.crackling.resources.TeamRessource
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
@@ -67,7 +68,9 @@ class TeamController(private val application: Application) {
      */
     fun getTeamById(id: Int) = transaction {
         try {
-        TeamEntity[id].toDTO().apply {
+            // teamResource used for links
+            val teamResource = TeamRessource.Id(TeamRessource(), id)
+            TeamEntity[id].toDTO(withMembers = true).apply {
                 _links.putAll(
                     mapOf(
                         "self" to HateoasLink(GET, application.href(TeamRessource.Id(id = this.id!!))),
@@ -75,6 +78,16 @@ class TeamController(private val application: Application) {
                         "delete" to HateoasLink(DELETE, application.href(TeamRessource.Id(id = this.id)))
                     )
                 )
+                // Add links to each member
+                members?.forEach { member ->
+                    val memberResource =
+                        MemberRessource.Id(MemberRessource(teamResource), member.email)
+                    member._links.putAll(
+                        mapOf(
+                            "self" to HateoasLink(GET, application.href(memberResource)),
+                        )
+                    )
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -93,7 +106,7 @@ class TeamController(private val application: Application) {
             this.name = team.name
             this.description = team.description
         }.id.value
-        team.apply { 
+        team.apply {
             _links.putAll(
                 mapOf(
                     "self" to HateoasLink(GET, application.href(TeamRessource.Id(id = id))),
@@ -117,7 +130,7 @@ class TeamController(private val application: Application) {
             it.name = team.name
             it.description = team.description
         }
-        team.apply { 
+        team.apply {
             _links.putAll(
                 mapOf(
                     "self" to HateoasLink(GET, application.href(TeamRessource.Id(id = id))),
@@ -127,7 +140,7 @@ class TeamController(private val application: Application) {
         }
     }
     //#endregion
-    
+
     fun deleteTeam(id: Int) = transaction {
         TeamEntity[id].delete()
     }

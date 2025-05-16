@@ -20,12 +20,11 @@ class MemberController(private val application: Application) {
     fun getMembersOfTeam(self: MemberRessource): ListMembersDTO = transaction {
         val teamId = self.parent.id
 
-        val list = buildList<MemberDTO> {
+        val list = buildList {
             MemberEntity.find { Members.team eq teamId }.forEach { member ->
                 add(member.toDTO())
             }
         }
-        
 
         // Member HATEOAS Links addition
         list.forEach { member ->

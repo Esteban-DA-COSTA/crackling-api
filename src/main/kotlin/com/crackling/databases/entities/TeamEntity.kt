@@ -7,11 +7,19 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
-class TeamEntity(id: EntityID<Int>): IntEntity(id) {
+class TeamEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<TeamEntity>(Teams)
+
     var name by Teams.name
     var description by Teams.description
     val members by MemberEntity referrersOn Members.team
-    
-    fun toDTO() = TeamDTO(id.value, name, description)
+
+    fun toDTO(withMembers: Boolean = false): TeamDTO {
+        return TeamDTO(
+            id.value,
+            name,
+            description,
+            if (withMembers) members.map { it.toDTO(withTeam = false) } else null
+        )
+    }
 } 

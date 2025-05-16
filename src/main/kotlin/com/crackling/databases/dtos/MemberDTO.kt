@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MemberDTO(
     private val user: UserDTO = UserDTO("", "", ""),
-    val team: TeamDTO,
+    val team: TeamDTO? = null,
     val role: String,
 ) : HateoasDTO {
     val email: String by user::email

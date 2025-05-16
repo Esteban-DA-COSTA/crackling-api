@@ -14,7 +14,11 @@ class MemberEntity(id: EntityID<CompositeID>): CompositeEntity(id) {
     var team by TeamEntity referencedOn Members.team
     var role by Members.role
     
-    fun toDTO(): MemberDTO = MemberDTO(user.toDTO(), team.toDTO(), role)
+    fun toDTO(withTeam: Boolean = false): MemberDTO = MemberDTO(
+        user.toDTO(),
+        if (withTeam) team.toDTO() else null,
+        role
+    )
     
 
     operator fun invoke() = toDTO()
