@@ -69,13 +69,14 @@ class TeamController(private val application: Application) {
     fun getTeamById(id: Int) = transaction {
         try {
             // teamResource used for links
-            val teamResource = TeamRessource.Id(TeamRessource(), id)
+            val teamResource = TeamRessource.Id(id = id)
             TeamEntity[id].toDTO(withMembers = true).apply {
                 _links.putAll(
                     mapOf(
-                        "self" to HateoasLink(GET, application.href(TeamRessource.Id(id = this.id!!))),
-                        "edit" to HateoasLink(PUT, application.href(TeamRessource.Id(id = this.id))),
-                        "delete" to HateoasLink(DELETE, application.href(TeamRessource.Id(id = this.id)))
+                        "self" to HateoasLink(GET, application.href(teamResource)),
+                        "edit" to HateoasLink(PUT, application.href(teamResource)),
+                        "delete" to HateoasLink(DELETE, application.href(teamResource)),
+                        "viewMember" to HateoasLink(GET, application.href(MemberRessource(teamResource))),
                     )
                 )
                 // Add links to each member

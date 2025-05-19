@@ -2,26 +2,24 @@ package com.crackling.databases.dtos
 
 import com.crackling.resources.HateoasLink
 import com.crackling.resources.HateoasLinks
-import kotlinx.serialization.Serializable
 
-@Serializable
-data class TeamDTO(
-    val id: Int? = null,
+data class TaskDTO(
     val name: String,
     val description: String,
-    val members: List<MemberDTO>? = null,
+    val completed: Boolean,
+    val team: TeamDTO? = null,
+    val assignee: UserDTO? = null
 ) : HateoasDTO {
     override val _links: HateoasLinks = mutableMapOf()
-    override fun addLinks(vararg link: Pair<String, HateoasLink>): TeamDTO {
+    override fun addLinks(vararg link: Pair<String, HateoasLink>): TaskDTO {
         link.forEach { _links += it }
         return this
     }
 }
 
-@Serializable
-data class ListTeamDTO(val list: List<TeamDTO> = listOf()) : HateoasDTO {
+data class ListTaskDTO(val list: List<TaskDTO> = listOf()) : HateoasDTO {
     override val _links: HateoasLinks = mutableMapOf()
-    override fun addLinks(vararg link: Pair<String, HateoasLink>): ListTeamDTO {
+    override fun addLinks(vararg link: Pair<String, HateoasLink>): ListTaskDTO {
         link.forEach { _links += it }
         return this
     }

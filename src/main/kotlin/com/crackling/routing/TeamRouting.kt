@@ -2,7 +2,7 @@ package com.crackling.routing
 
 import com.crackling.controllers.TeamController
 import com.crackling.databases.dtos.TeamDTO
-import com.crackling.resources.TeamRessource
+import com.crackling.resources.TeamResource
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.resources.*
@@ -14,26 +14,26 @@ import io.ktor.server.routing.*
 
 fun Route.configureTeamRouting() {
     val teamController = TeamController(this.application)
-    get<TeamRessource> {
+    get<TeamResource> {
         if (it.name != null)
             call.respond(teamController.getTeamByName(it.name))
         else
             call.respond(teamController.getAllTeams())
     }
-    get<TeamRessource.Id> {
+    get<TeamResource.Id> {
         call.respond(teamController.getTeamById(it.id))
     }
-    post<TeamRessource> {
+    post<TeamResource> {
         val teamDTO = call.receive<TeamDTO>()
         teamController.createTeam(teamDTO)
         call.respond(HttpStatusCode.Created, teamDTO)
     }
-    put<TeamRessource.Id> {
+    put<TeamResource.Id> {
         val teamDTO = call.receive<TeamDTO>()
         teamController.updateTeam(it.id, teamDTO)
         call.respond(HttpStatusCode.OK, teamDTO)
     }
-    delete<TeamRessource.Id> { 
+    delete<TeamResource.Id> { 
         teamController.deleteTeam(it.id)
     }
 }
