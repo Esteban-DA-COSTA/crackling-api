@@ -14,6 +14,7 @@ class UserEntity(email: EntityID<String>): Entity<String>(email) {
     var username by Users.username
     var password by Users.password
     val biography by Users.biography
+    val avatar by Users.avatar
     val background by Users.background
     val teams by TeamEntity via Members
     
