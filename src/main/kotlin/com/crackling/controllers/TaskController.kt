@@ -1,7 +1,6 @@
 package com.crackling.controllers
 
 import com.crackling.databases.dtos.ListTaskDTO
-import com.crackling.databases.dtos.TaskDTO
 import com.crackling.databases.entities.TaskEntity
 import com.crackling.databases.entities.TeamEntity
 import com.crackling.databases.entities.UserEntity
@@ -18,7 +17,7 @@ class TaskController(private val application: Application) {
 
     fun getAllTasksOfTeam(self: TaskResource): ListTaskDTO = transaction {
         val teamId = self.parent.id
-        val list = buildList<TaskDTO> {
+        val list = buildList {
             TaskEntity.find { team eq teamId }.forEach {
                 add(it.toDTO())
             }
@@ -29,7 +28,7 @@ class TaskController(private val application: Application) {
         )
         return@transaction listDTO
     }
-    
+
 
     fun createTaskForTeam(self: TaskResource.Add, task: TaskAddPayload) = transaction {
         val teamId = self.parent.parent.id

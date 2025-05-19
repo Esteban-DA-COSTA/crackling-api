@@ -4,14 +4,10 @@ import com.crackling.databases.dtos.ListMembersDTO
 import com.crackling.databases.dtos.MemberDTO
 import com.crackling.databases.entities.MemberEntity
 import com.crackling.databases.tables.Members
-import com.crackling.resources.HateoasLink
-import com.crackling.resources.HttpVerb
-import com.crackling.resources.MemberRemoval
-import com.crackling.resources.MemberResource
-import com.crackling.resources.MemberRole
+import com.crackling.resources.*
 import com.crackling.routing.payloads.MemberAddPayload
-import io.ktor.server.application.Application
-import io.ktor.server.resources.href
+import io.ktor.server.application.*
+import io.ktor.server.resources.*
 import org.jetbrains.exposed.dao.id.CompositeID
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
@@ -20,6 +16,7 @@ class MemberController(private val application: Application) {
     fun getMembersOfTeam(self: MemberResource): ListMembersDTO = transaction {
         val teamId = self.parent.id
 
+        // Retrieve all members for the given team
         val list = buildList {
             MemberEntity.find { Members.team eq teamId }.forEach { member ->
                 add(member.toDTO())
@@ -29,20 +26,16 @@ class MemberController(private val application: Application) {
         // Member HATEOAS Links addition
         list.forEach { member ->
             val selfResource = MemberResource.Id(self, member.email)
-            member._links.putAll(
-                mapOf(
-                    "self" to HateoasLink(HttpVerb.GET, application.href(selfResource)),
-                )
+            member.addLinks(
+                "self" to HateoasLink(HttpVerb.GET, application.href(selfResource)),
             )
         }
-        
+
         // List HATEOAS Links addition
         val memberList = ListMembersDTO(list).apply {
-            _links.putAll(
-                mapOf(
-                    "self" to HateoasLink(HttpVerb.GET, application.href(self)),
-                    "addMember" to HateoasLink(HttpVerb.POST, application.href(MemberResource.Add(self)))
-                )
+            addLinks(
+                "self" to HateoasLink(HttpVerb.GET, application.href(self)),
+                "addMember" to HateoasLink(HttpVerb.POST, application.href(MemberResource.Add(self)))
             )
         }
         return@transaction memberList
@@ -54,16 +47,16 @@ class MemberController(private val application: Application) {
             it[Members.user] = member.email
             it[Members.team] = teamId
         }
-        
+
         MemberEntity.new(memberId) {
             role = member.role
         }
     }
-    
+
     fun getMemberByEmail(self: MemberResource.Id): MemberDTO = transaction {
         val email = self.email
         val teamResource = self.parent
-            MemberEntity.find { Members.user eq email }.first().toDTO().apply { 
+        MemberEntity.find { Members.user eq email }.first().toDTO().apply {
             this._links.putAll(
                 mapOf(
                     "self" to HateoasLink(HttpVerb.GET, application.href(self)),
@@ -74,17 +67,17 @@ class MemberController(private val application: Application) {
             )
         }
     }
-    
+
     fun removeMemberFromTeam(self: MemberRemoval) = transaction {
         val email = self.parent.email
-        
+
         MemberEntity.find { Members.user eq email }.first().delete()
     }
-    
+
     fun changeMemberRole(self: MemberRole, newRole: String) = transaction {
         Members.update(where = { Members.user eq self.parent.email }) {
             it[role] = newRole
         }
     }
-    
+
 }
