@@ -19,11 +19,12 @@ class TaskEntity(id: EntityID<Int>) : IntEntity(id) {
 
     fun toDTO(addTeam: Boolean = false, addMember: Boolean = false) = 
         TaskDTO(
+            id.value,
             name,
             description,
             completed,
             if (addTeam) team.toDTO() else null,
-            (if (addMember) assignee?.toDTO() else null) as UserDTO?
+            (if (addMember) assignee?.toDTO() else null)
         )
     
     operator fun invoke() = toDTO()

@@ -9,11 +9,12 @@ data class TeamDTO(
     val id: Int? = null,
     val name: String,
     val description: String,
-    val members: List<MemberDTO>? = null,
+    val members: ListMembersDTO? = null,
+    val tasks: ListTaskDTO? = null
 ) : HateoasDTO {
     override val _links: HateoasLinks = mutableMapOf()
     override fun addLinks(vararg link: Pair<String, HateoasLink>): TeamDTO {
-        link.forEach { _links += it }
+        _links.putAll(link)
         return this
     }
 }
@@ -22,7 +23,7 @@ data class TeamDTO(
 data class ListTeamDTO(val list: List<TeamDTO> = listOf()) : HateoasDTO {
     override val _links: HateoasLinks = mutableMapOf()
     override fun addLinks(vararg link: Pair<String, HateoasLink>): ListTeamDTO {
-        link.forEach { _links += it }
+        _links.putAll(link)
         return this
     }
 }

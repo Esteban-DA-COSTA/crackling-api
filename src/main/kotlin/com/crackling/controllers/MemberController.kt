@@ -14,7 +14,7 @@ import org.jetbrains.exposed.sql.update
 
 class MemberController(private val application: Application) {
     fun getMembersOfTeam(self: MemberResource): ListMembersDTO = transaction {
-        val teamId = self.parent.id
+        val teamId = self.parent.teamId
 
         // Retrieve all members for the given team
         val list = buildList {
@@ -42,7 +42,7 @@ class MemberController(private val application: Application) {
     }
 
     fun addMemberToTeam(self: MemberResource.Add, member: MemberAddPayload) = transaction {
-        val teamId = self.parent.parent.id
+        val teamId = self.parent.parent.teamId
         val memberId = CompositeID {
             it[Members.user] = member.email
             it[Members.team] = teamId
@@ -61,20 +61,20 @@ class MemberController(private val application: Application) {
                 mapOf(
                     "self" to HateoasLink(HttpVerb.GET, application.href(self)),
                     "team" to HateoasLink(HttpVerb.GET, application.href(teamResource)),
-                    "removeFromTeam" to HateoasLink(HttpVerb.DELETE, application.href(MemberRemoval(self))),
-                    "changeRole" to HateoasLink(HttpVerb.PUT, application.href(MemberRole(self)))
+                    "removeFromTeam" to HateoasLink(HttpVerb.DELETE, application.href(MemberRemovalResource(self))),
+                    "changeRole" to HateoasLink(HttpVerb.PUT, application.href(MemberRoleResource(self)))
                 )
             )
         }
     }
 
-    fun removeMemberFromTeam(self: MemberRemoval) = transaction {
+    fun removeMemberFromTeam(self: MemberRemovalResource) = transaction {
         val email = self.parent.email
 
         MemberEntity.find { Members.user eq email }.first().delete()
     }
 
-    fun changeMemberRole(self: MemberRole, newRole: String) = transaction {
+    fun changeMemberRole(self: MemberRoleResource, newRole: String) = transaction {
         Members.update(where = { Members.user eq self.parent.email }) {
             it[role] = newRole
         }

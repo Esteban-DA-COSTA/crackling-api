@@ -21,7 +21,8 @@ fun Route.configureTeamRouting() {
             call.respond(teamController.getAllTeams())
     }
     get<TeamResource.Id> {
-        call.respond(teamController.getTeamById(it.id))
+        val team = teamController.getTeamById(it.teamId)
+        call.respond(team)
     }
     post<TeamResource> {
         val teamDTO = call.receive<TeamDTO>()
@@ -30,10 +31,10 @@ fun Route.configureTeamRouting() {
     }
     put<TeamResource.Id> {
         val teamDTO = call.receive<TeamDTO>()
-        teamController.updateTeam(it.id, teamDTO)
+        teamController.updateTeam(it.teamId, teamDTO)
         call.respond(HttpStatusCode.OK, teamDTO)
     }
     delete<TeamResource.Id> { 
-        teamController.deleteTeam(it.id)
+        teamController.deleteTeam(it.teamId)
     }
 }

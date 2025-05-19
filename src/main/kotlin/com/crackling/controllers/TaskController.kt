@@ -16,7 +16,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class TaskController(private val application: Application) {
 
     fun getAllTasksOfTeam(self: TaskResource): ListTaskDTO = transaction {
-        val teamId = self.parent.id
+        val teamId = self.parent.teamId
         val list = buildList {
             TaskEntity.find { team eq teamId }.forEach {
                 add(it.toDTO())
@@ -31,7 +31,7 @@ class TaskController(private val application: Application) {
 
 
     fun createTaskForTeam(self: TaskResource.Add, task: TaskAddPayload) = transaction {
-        val teamId = self.parent.parent.id
+        val teamId = self.parent.parent.teamId
         val teamEntity = TeamEntity.findById(teamId)
         var assignee: UserEntity? = null
         if (task.assignee != null) {

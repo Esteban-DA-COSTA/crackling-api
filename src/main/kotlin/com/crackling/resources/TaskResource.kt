@@ -8,10 +8,14 @@ class TaskResource(val parent: TeamResource.Id) {
     @Resource("add")
     class Add(val parent: TaskResource)
     
-    @Resource("{id}")
-    class Id(val parent: TaskResource, val id: Int)
+    @Resource("{taskId}")
+    class Id(val parent: TaskResource, val taskId: Int)
     {
         @Resource("remove")
         class Remove(val parent: Id)
     }
 }
+
+//#region ALIASES
+typealias TaskRemovalResource = TaskResource.Id.Remove
+//#endregion

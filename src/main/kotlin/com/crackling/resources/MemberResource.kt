@@ -21,10 +21,10 @@ class MemberResource(val parent: TeamResource.Id) {
 /**
  * Alias for [MemberResource.Id.Remove]
  */
-typealias MemberRemoval = MemberResource.Id.Remove
+typealias MemberRemovalResource = MemberResource.Id.Remove
 
 /**
  * Alias for [MemberResource.Id.Role]
  */
-typealias MemberRole = MemberResource.Id.Role
+typealias MemberRoleResource = MemberResource.Id.Role
 //#endregion
