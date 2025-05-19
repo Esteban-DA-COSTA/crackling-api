@@ -3,9 +3,9 @@ package com.crackling.databases.entities
 import com.crackling.databases.dtos.TaskDTO
 import com.crackling.databases.dtos.UserDTO
 import com.crackling.databases.tables.Tasks
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.dao.IntEntity
+import org.jetbrains.exposed.v1.dao.IntEntityClass
 
 class TaskEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<TaskEntity>(Tasks)

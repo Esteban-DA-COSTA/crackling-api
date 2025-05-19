@@ -4,7 +4,7 @@ import com.crackling.databases.dtos.UserDTO
 import com.crackling.databases.entities.UserEntity
 import com.crackling.exceptions.InvalidFormatException
 import io.ktor.server.application.Application
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 class UserController(private val application: Application) {
 

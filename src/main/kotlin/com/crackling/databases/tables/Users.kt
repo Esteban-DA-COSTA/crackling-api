@@ -1,6 +1,6 @@
 package com.crackling.databases.tables
 
-import org.jetbrains.exposed.dao.id.IdTable
+import org.jetbrains.exposed.v1.core.dao.id.IdTable
 
 object Users: IdTable<String>() {
     val email = varchar("email", 255).entityId()

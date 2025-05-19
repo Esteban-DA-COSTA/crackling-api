@@ -6,9 +6,9 @@ import com.crackling.databases.dtos.TeamDTO
 import com.crackling.databases.tables.Members
 import com.crackling.databases.tables.Tasks
 import com.crackling.databases.tables.Teams
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.dao.IntEntity
+import org.jetbrains.exposed.v1.dao.IntEntityClass
 
 class TeamEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<TeamEntity>(Teams)

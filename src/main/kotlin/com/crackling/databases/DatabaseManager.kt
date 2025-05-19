@@ -5,9 +5,9 @@ import com.crackling.databases.tables.Tasks
 import com.crackling.databases.tables.Teams
 import com.crackling.databases.tables.Users
 import io.ktor.server.config.*
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.SchemaUtils
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 object DatabaseManager {
     private lateinit var db: Database
@@ -23,10 +23,7 @@ object DatabaseManager {
     
     fun createTables() {
         transaction {
-            SchemaUtils.create(Teams)
-            SchemaUtils.create(Users)
-            SchemaUtils.create(Members)
-            SchemaUtils.create(Tasks)
+            SchemaUtils.create(Teams, Users, Members, Tasks)
         }
     }
 }

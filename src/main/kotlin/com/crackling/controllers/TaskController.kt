@@ -11,7 +11,7 @@ import com.crackling.resources.TaskResource
 import com.crackling.routing.payloads.TaskAddPayload
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 class TaskController(private val application: Application) {
 

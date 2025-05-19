@@ -3,10 +3,10 @@ package com.crackling.databases.entities
 import com.crackling.databases.dtos.MemberDTO
 import com.crackling.databases.tables.Members
 import com.crackling.databases.tables.Tasks
-import org.jetbrains.exposed.dao.CompositeEntity
-import org.jetbrains.exposed.dao.CompositeEntityClass
-import org.jetbrains.exposed.dao.id.CompositeID
-import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.CompositeID
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.dao.CompositeEntity
+import org.jetbrains.exposed.v1.dao.CompositeEntityClass
 
 class MemberEntity(id: EntityID<CompositeID>): CompositeEntity(id) {
     companion object: CompositeEntityClass<MemberEntity>(Members)

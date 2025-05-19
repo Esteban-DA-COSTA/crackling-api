@@ -1,6 +1,6 @@
 package com.crackling.databases.tables
 
-import org.jetbrains.exposed.dao.id.CompositeIdTable
+import org.jetbrains.exposed.v1.core.dao.id.CompositeIdTable
 
 object Members: CompositeIdTable() {
     val user = reference("user", Users)

@@ -8,9 +8,9 @@ import com.crackling.resources.*
 import com.crackling.routing.payloads.MemberAddPayload
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
-import org.jetbrains.exposed.dao.id.CompositeID
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.v1.core.dao.id.CompositeID
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.update
 
 class MemberController(private val application: Application) {
     fun getMembersOfTeam(self: MemberResource): ListMembersDTO = transaction {

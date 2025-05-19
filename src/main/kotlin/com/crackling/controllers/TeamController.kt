@@ -8,7 +8,7 @@ import com.crackling.resources.*
 import com.crackling.resources.HttpVerb.*
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 class TeamController(private val application: Application) {
     //#region GET
