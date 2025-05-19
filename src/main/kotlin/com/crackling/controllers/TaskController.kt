@@ -21,11 +21,11 @@ class TaskController(private val application: Application) {
             TaskEntity.find { team eq teamId }.forEach {
                 add(it.toDTO())
             }
-        }
+        }.toMutableList()
         val listDTO = ListTaskDTO(list).addLinks(
             "self" to HateoasLink(HttpVerb.POST, application.href(self)),
             "add" to HateoasLink(HttpVerb.POST, application.href(TaskResource.Add(self)))
-        )
+        ) as ListTaskDTO
         return@transaction listDTO
     }
 

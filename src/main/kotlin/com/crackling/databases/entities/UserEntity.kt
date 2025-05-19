@@ -13,6 +13,8 @@ class UserEntity(email: EntityID<String>): Entity<String>(email) {
     var email by Users.email
     var username by Users.username
     var password by Users.password
+    val biography by Users.biography
+    val background by Users.background
     val teams by TeamEntity via Members
     
     fun toDTO() = UserDTO(email.value, username, password)

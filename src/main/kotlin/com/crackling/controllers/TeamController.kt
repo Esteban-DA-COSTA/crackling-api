@@ -2,10 +2,15 @@ package com.crackling.controllers
 
 import com.crackling.databases.dtos.ListTeamDTO
 import com.crackling.databases.dtos.TeamDTO
+import com.crackling.databases.dtos.buildTeam
+import com.crackling.databases.dtos.buildTeamList
 import com.crackling.databases.entities.TeamEntity
 import com.crackling.databases.tables.Teams
-import com.crackling.resources.*
+import com.crackling.resources.HateoasLink
 import com.crackling.resources.HttpVerb.*
+import com.crackling.resources.MemberResource
+import com.crackling.resources.TaskResource
+import com.crackling.resources.TeamResource
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
@@ -19,21 +24,15 @@ class TeamController(private val application: Application) {
      * @return a list of TeamDTO representing all teams.
      */
     fun getAllTeams(): ListTeamDTO = transaction {
-        ListTeamDTO(
-            TeamEntity.all().map {
-                it.toDTO().apply {
-                    addLinks(
-                        "self" to HateoasLink(GET, application.href(TeamResource.Id(teamId = it.id.value))),
-                        "edit" to HateoasLink(PUT, application.href(TeamResource.Id(teamId = it.id.value))),
-                        "delete" to HateoasLink(DELETE, application.href(TeamResource.Id(teamId = it.id.value)))
-                    )
+        buildTeamList {
+            TeamEntity.all().forEach { teamEntity ->
+                team(teamEntity) {
+                    action("self") {
+                        protocol = GET
+                        href = application.href(TeamResource.Id(teamId = teamEntity.id.value))
+                    }
                 }
             }
-        ).apply {
-            addLinks(
-                "self" to HateoasLink(GET, application.href(TeamResource())),
-                "create" to HateoasLink(POST, application.href(TeamResource()))
-            )
         }
     }
 
@@ -47,69 +46,70 @@ class TeamController(private val application: Application) {
         TeamEntity.find { Teams.name eq name }.map { it.toDTO() }[0].apply {
             addLinks(
                 "self" to HateoasLink(GET, application.href(TeamResource.Id(teamId = this.id!!))),
-                "edit" to HateoasLink(PUT, application.href(TeamResource.Id(teamId = this.id))),
-                "delete" to HateoasLink(DELETE, application.href(TeamResource.Id(teamId = this.id)))
+                "edit" to HateoasLink(PUT, application.href(TeamResource.Id(teamId = this.id!!))),
+                "delete" to HateoasLink(DELETE, application.href(TeamResource.Id(teamId = this.id!!)))
             )
         }
     }
-
-    /**
-     * Retrieves a team from the database by its ID.
-     * When searching for a specific team, linked information as members and tasks will be sent.
-     *
-     * @param id The ID of the team to retrieve.
-     * @return A TeamDTO representing the team found by ID.
-     */
+    
     fun getTeamById(id: Int) = transaction {
         try {
             // teamResource used for links
             val teamResource = TeamResource.Id(teamId = id)
-            TeamEntity[id].toDTO(withMembers = true, withTasks = true).apply {
-                addLinks(
-                    "self" to HateoasLink(GET, application.href(teamResource)),
-                    "edit" to HateoasLink(PUT, application.href(teamResource)),
-                    "delete" to HateoasLink(DELETE, application.href(teamResource)),
-                )
-                // Add links to each member
-                members?.list?.forEach { member ->
-                    val memberResource =
-                        MemberResource.Id(MemberResource(teamResource), member.email)
-                    member.addLinks(
-                        "self" to HateoasLink(GET, application.href(memberResource)),
-                        "removeFromTeam" to HateoasLink(
-                            DELETE,
-                            application.href(MemberRemovalResource(memberResource))
-                        ),
-                        "changeRole" to HateoasLink(
-                            PUT,
-                            application.href(MemberRoleResource(memberResource))
-                        )
-                    )
+            val entity = TeamEntity[id]
+            buildTeam(entity) {
+                members {
+                    entity.members.toList()
+                    entity.members.forEach { memberEntity ->
+                        member(memberEntity) {
+                            action("self") {
+                                protocol = GET
+                                href = application.href(
+                                    MemberResource.Id(
+                                        MemberResource(teamResource),
+                                        memberEntity.user.email.value
+                                    )
+                                )
+                            }
+                        }
+                    }
+                    action("self") {
+                        protocol = GET
+                        href = application.href(MemberResource(teamResource))
+                    }
+                    action("add") {
+                        protocol = POST
+                        href = application.href(MemberResource.Add(MemberResource(teamResource)))
+                    }
                 }
-                members?.addLinks(
-                    "self" to HateoasLink(GET, application.href(MemberResource(teamResource))),
-                    "add" to HateoasLink(
-                        POST,
-                        application.href(MemberResource.Add(MemberResource(teamResource)))
-                    )
-                )
-                tasks?.list?.forEach { task ->
-                    val taskResource = TaskResource.Id(TaskResource(teamResource), task.id!!)
-                    task.addLinks(
-                        "self" to HateoasLink(GET, application.href(taskResource)),
-                        "remove" to HateoasLink(
-                            DELETE,
-                            application.href(TaskRemovalResource(taskResource))
-                        ),
-                    )
+                tasks {
+                    entity.tasks.forEach { taskEntity ->
+                        task(taskEntity) {
+                            action("self") {
+                                protocol = GET
+                                href = application.href(
+                                    TaskResource.Id(
+                                        TaskResource(teamResource),
+                                        taskEntity.id.value
+                                    )
+                                )
+                            }
+                        }
+
+                    }
                 }
-                tasks?.addLinks(
-                    "self" to HateoasLink(GET, application.href(TaskResource(teamResource))),
-                    "add" to HateoasLink(
-                        POST,
-                        application.href(TaskResource.Add(TaskResource(teamResource)))
-                    )
-                )
+                action("self") {
+                    protocol = GET
+                    href = application.href(teamResource)
+                }
+                action("edit") {
+                    protocol = PUT
+                    href = application.href(teamResource)
+                }
+                action("delete") {
+                    protocol = DELETE
+                    href = application.href(teamResource)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -128,12 +128,20 @@ class TeamController(private val application: Application) {
             this.name = team.name
             this.description = team.description
         }.id.value
-        team.apply {
-            addLinks(
-                "self" to HateoasLink(GET, application.href(TeamResource.Id(teamId = id))),
-                "edit" to HateoasLink(PUT, application.href(TeamResource.Id(teamId = id))),
-                "delete" to HateoasLink(DELETE, application.href(TeamResource.Id(teamId = id)))
-            )
+        val teamResource = TeamResource.Id(teamId = id)
+        buildTeam(TeamEntity[id]) {
+            action("self") {
+                protocol = GET
+                href = application.href(teamResource)
+            }
+            action("edit") {
+                protocol = PUT
+                href = application.href(teamResource)
+            }
+            action("delete") {
+                protocol = DELETE
+                href = application.href(teamResource)
+            }
         }
     }
     //#endregion

@@ -21,7 +21,7 @@ class MemberController(private val application: Application) {
             MemberEntity.find { Members.team eq teamId }.forEach { member ->
                 add(member.toDTO())
             }
-        }
+        }.toMutableList()
 
         // Member HATEOAS Links addition
         list.forEach { member ->

@@ -1,6 +1,6 @@
 package com.crackling.databases.dtos
 
-import com.crackling.resources.HateoasLink
+import com.crackling.databases.entities.MemberEntity
 import com.crackling.resources.HateoasLinks
 import kotlinx.serialization.Serializable
 
@@ -15,17 +15,15 @@ data class MemberDTO(
     val password: String by user::password
 
     override val _links: HateoasLinks = mutableMapOf()
-    override fun addLinks(vararg link: Pair<String, HateoasLink>): MemberDTO {
-        link.forEach { _links += it }
-        return this
-    }
+
 }
 
 @Serializable
-data class ListMembersDTO(val list: List<MemberDTO> = listOf()) : HateoasDTO {
+data class ListMembersDTO(val list: MutableList<MemberDTO> = mutableListOf()) : HateoasDTO {
     override val _links: HateoasLinks = mutableMapOf()
-    override fun addLinks(vararg link: Pair<String, HateoasLink>): ListMembersDTO {
-        link.forEach { _links += it }
+
+    fun member(member: MemberEntity, init: (MemberDTO.() -> Unit)): ListMembersDTO {
+        list.add(member.toDTO().also { it.init() })
         return this
     }
 }

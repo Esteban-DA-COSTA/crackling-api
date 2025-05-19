@@ -6,6 +6,9 @@ object Users: IdTable<String>() {
     val email = varchar("email", 255).entityId()
     val username = varchar("username", 255).uniqueIndex()
     val password = varchar("password", 255)
+    val biography = varchar("biography", 255)
+    val avatar = blob("avatar")
+    val background = blob("background")
     
     override val id = email
     override val primaryKey = PrimaryKey(email)
