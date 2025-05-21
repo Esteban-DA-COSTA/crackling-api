@@ -3,12 +3,11 @@ package com.crackling.controllers
 import com.crackling.databases.entities.MemberEntity
 import com.crackling.databases.tables.Members
 import com.crackling.routing.payloads.MemberAddPayload
-import io.ktor.server.application.*
 import org.jetbrains.exposed.v1.core.dao.id.CompositeID
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.jdbc.update
 
-class MemberController(private val application: Application) {
+class MemberController() {
 
     fun addMemberToTeam(teamId: Int, member: MemberAddPayload) = transaction {
         val memberId = CompositeID {
