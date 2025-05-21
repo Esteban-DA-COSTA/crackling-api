@@ -7,11 +7,8 @@ import com.crackling.databases.entities.MemberEntity
 import com.crackling.databases.entities.TeamEntity
 import com.crackling.databases.tables.Members
 import com.crackling.databases.tables.Teams
-import com.crackling.resources.HateoasLink
+import com.crackling.resources.*
 import com.crackling.resources.HttpVerb.*
-import com.crackling.resources.MemberResource
-import com.crackling.resources.TaskResource
-import com.crackling.resources.TeamResource
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import org.jetbrains.exposed.v1.core.dao.id.CompositeID
@@ -53,7 +50,7 @@ class TeamController(private val app: Application) {
             )
         }
     }
-    
+
     fun getTeamById(id: Int) = transaction {
         try {
             // teamResource used for links
@@ -61,23 +58,31 @@ class TeamController(private val app: Application) {
             val entity = TeamEntity[id]
             buildTeam(entity) {
                 members {
-                    entity.members.toList()
                     entity.members.forEach { memberEntity ->
                         member(memberEntity) {
-                            action("self") {
-                                protocol = GET
+                            action("remove") {
+                                protocol = DELETE
                                 href = app.href(
-                                    MemberResource.Id(
-                                        MemberResource(teamResource),
-                                        memberEntity.user.email.value
+                                    MemberRemovalResource(
+                                        MemberResource.Id(
+                                            MemberResource(teamResource),
+                                            memberEntity.user.email.value
+                                        )
+                                    )
+                                )
+                            }
+                            action("changeRole") {
+                                protocol = PATCH
+                                href = app.href(
+                                    MemberRoleResource(
+                                        MemberResource.Id(
+                                            MemberResource(teamResource),
+                                            memberEntity.user.email.value
+                                        )
                                     )
                                 )
                             }
                         }
-                    }
-                    action("self") {
-                        protocol = GET
-                        href = app.href(MemberResource(teamResource))
                     }
                     action("add") {
                         protocol = POST
@@ -131,11 +136,11 @@ class TeamController(private val app: Application) {
             this.description = team.description
         }.id.value
         val teamResource = TeamResource.Id(teamId = id)
-        val memberId = CompositeID { 
+        val memberId = CompositeID {
             it[Members.user] = userEmail
             it[Members.team] = id
         }
-        MemberEntity.new(memberId) { 
+        MemberEntity.new(memberId) {
             role = "owner"
         }
         buildTeam(TeamEntity[id]) {

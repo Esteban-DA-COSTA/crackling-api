@@ -4,9 +4,10 @@ import io.ktor.resources.*
 
 
 @Resource("/teams")
+@Suppress("unused")
 class TeamResource(val name: String? = null) {
     
     @Resource("{teamId}")
-    class Id(val parent: TeamResource = TeamResource(), val teamId: Int)
+    class Id(val teams: TeamResource = TeamResource(), val teamId: Int)
 
 }

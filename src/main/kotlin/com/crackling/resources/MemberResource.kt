@@ -1,20 +1,21 @@
 package com.crackling.resources
 
-import io.ktor.resources.Resource
+import io.ktor.resources.*
 
 @Resource("members")
-class MemberResource(val parent: TeamResource.Id) {
+@Suppress("unused") 
+class MemberResource(val team: TeamResource.Id) {
     @Resource("{email}")
-    class Id(val parent: MemberResource, val email: String) {
+    class Id(val members: MemberResource, val email: String) {
         @Resource("remove")
-        class Remove(val parent: Id)
+        class Remove(val member: Id)
         
         @Resource("changeRole")
-        class Role(val parent: Id)
+        class Role(val member: Id)
     }
-    
+
     @Resource("add")
-    class Add(val parent: MemberResource)
+    class Add(val members: MemberResource)
 }
 
 //#region ALIASES

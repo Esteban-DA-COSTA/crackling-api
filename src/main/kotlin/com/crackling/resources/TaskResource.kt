@@ -3,6 +3,7 @@ package com.crackling.resources
 import io.ktor.resources.*
 
 @Resource("tasks")
+@Suppress("unused")
 class TaskResource(val parent: TeamResource.Id) {
     
     @Resource("add")
@@ -17,5 +18,6 @@ class TaskResource(val parent: TeamResource.Id) {
 }
 
 //#region ALIASES
+@Suppress("unused")
 typealias TaskRemovalResource = TaskResource.Id.Remove
 //#endregion

@@ -1,7 +1,6 @@
 package com.crackling.databases.entities
 
 import com.crackling.databases.dtos.TaskDTO
-import com.crackling.databases.dtos.UserDTO
 import com.crackling.databases.tables.Tasks
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.IntEntity
