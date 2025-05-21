@@ -1,9 +1,8 @@
 package com.crackling.controllers
 
+import com.crackling.builders.hateoas.*
 import com.crackling.databases.dtos.ListTeamDTO
 import com.crackling.databases.dtos.TeamDTO
-import com.crackling.databases.dtos.buildTeam
-import com.crackling.databases.dtos.buildTeamList
 import com.crackling.databases.entities.TeamEntity
 import com.crackling.databases.tables.Teams
 import com.crackling.resources.HateoasLink
