@@ -5,7 +5,6 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.crackling.databases.dtos.UserDTO
 import com.crackling.databases.dtos.UserLoggedDTO
 import com.crackling.databases.entities.UserEntity
-import com.crackling.databases.tables.Users
 import com.crackling.exceptions.InvalidFormatException
 import com.crackling.plugins.JwtInfo
 import com.crackling.resources.HttpVerb.GET
@@ -13,19 +12,27 @@ import com.crackling.resources.TeamResource
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.resources.*
-import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import java.security.MessageDigest
+import java.security.SecureRandom
+import java.util.*
 
 class UserController(private val app: Application) {
+
 
     fun createUser(user: UserDTO) {
         if (!validateEmail(user.email)) {
             throw InvalidFormatException()
         }
+
+        val salt = generateSalt()
+        val hashedPassword = hashPassword(user.password, salt)
+
         transaction {
             UserEntity.new(user.email) {
                 username = user.username
-                password = user.password
+                password = hashedPassword
+                this.salt = salt
             }
         }
     }
@@ -41,11 +48,15 @@ class UserController(private val app: Application) {
      */
     fun checkUser(email: String, password: String, jwtInfo: JwtInfo): UserLoggedDTO {
         return transaction {
-            val user = UserEntity.find { (Users.id eq email) and (Users.password eq password) }.firstOrNull()
+            val user = UserEntity.findById(email)
             if (user != null) {
-                return@transaction buildTokenDto(user, jwtInfo)
+                val hashedPassword = hashPassword(password, user.salt)
+                if (hashedPassword == user.password) {
+                    return@transaction buildTokenDto(user, jwtInfo)
+                }
+                throw NotFoundException("Invalid credentials")
             }
-            throw NotFoundException("User not found")
+            throw NotFoundException("Invalid credentials")
         }
     }
 
@@ -64,6 +75,28 @@ class UserController(private val app: Application) {
     }
 
     /**
+     * Generates a cryptographically secure random salt value represented as a UTF-8 string.
+     *
+     * @return A string representing the random salt value.
+     */
+    private fun generateSalt(): String {
+        return Base64.getEncoder().encodeToString(SecureRandom().generateSeed(16))
+    }
+
+    /**
+     * Hashes a password using a provided salt and the SHA-256 algorithm.
+     *
+     * @param password The plain-text password to be hashed.
+     * @param salt The salt to be combined with the password for hashing.
+     * @return The hashed password as a string.
+     */
+    private fun hashPassword(password: String, salt: String): String {
+        val messageDigest = MessageDigest.getInstance("SHA-256")
+        val input = (password + salt).toByteArray()
+        return Base64.getEncoder().encodeToString(messageDigest.digest(input))
+    }
+
+    /**
      * Builds a Dto to return after a successful login.
      *
      * @param user The user for whom the token is being generated.
@@ -75,7 +108,7 @@ class UserController(private val app: Application) {
             .withAudience(jwtInfo.audience)
             .withIssuer(jwtInfo.issuer)
             .sign(Algorithm.HMAC256(jwtInfo.secret))
-        return UserLoggedDTO(token).apply { 
+        return UserLoggedDTO(token).apply {
             addLinks(
                 "home" to (GET on app.href(TeamResource())),
                 "team" to (GET on app.href(TeamResource()))

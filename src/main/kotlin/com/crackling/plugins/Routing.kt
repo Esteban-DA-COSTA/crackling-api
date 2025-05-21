@@ -1,5 +1,6 @@
 package com.crackling.plugins
 
+import com.crackling.routing.configureAuthRouting
 import com.crackling.routing.configureMemberRouting
 import com.crackling.routing.configureTaskRouting
 import com.crackling.routing.configureTeamRouting
@@ -20,12 +21,11 @@ fun Application.configureRouting() {
         }
     }
     routing {
-
-
         swaggerUI("/docs", "crackling_api_spec.yaml")
         get("/helloWorld") {
             call.respondText("Hello World!")
         }
+        configureAuthRouting()
         authenticate {
             configureTeamRouting()
             configureMemberRouting()

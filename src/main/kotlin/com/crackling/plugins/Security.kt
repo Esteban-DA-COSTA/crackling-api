@@ -2,24 +2,17 @@ package com.crackling.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.crackling.controllers.UserController
-import com.crackling.databases.dtos.UserDTO
-import com.crackling.resources.AuthResource
-import com.crackling.routing.payloads.UserLoginPayload
-import com.crackling.routing.payloads.UserRegisterPayload
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.plugins.cors.routing.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+
+val Application.jwtInfo: JwtInfo
+    get() = JwtInfo(this)
 
 fun Application.configureSecurity() {
-    // Read JWT configuration from application.yaml
-    val jwtInfo = JwtInfo(this)
-    
+    val jwtInfo = jwtInfo
     authentication {
         jwt {
             realm = jwtInfo.realm
@@ -33,13 +26,6 @@ fun Application.configureSecurity() {
             validate { credential ->
                 JWTPrincipal(credential.payload)
             }
-        }
-    }
-    routing {
-        post<AuthResource.Login> {
-            val (email, password) = call.receive<UserLoginPayload>()
-            val userController = UserController(application)
-            return@post call.respond(userController.checkUser(email, password, jwtInfo))
         }
     }
 }
