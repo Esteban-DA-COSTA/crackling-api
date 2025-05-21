@@ -108,6 +108,7 @@ class UserController(private val app: Application) {
         val token = JWT.create()
             .withAudience(jwtInfo.audience)
             .withIssuer(jwtInfo.issuer)
+            .withClaim("email", user.email.value)
             .sign(Algorithm.HMAC256(jwtInfo.secret))
         return UserLoggedDTO(token).apply {
             addLinks(

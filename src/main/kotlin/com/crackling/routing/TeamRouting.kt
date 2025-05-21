@@ -4,6 +4,8 @@ import com.crackling.controllers.TeamController
 import com.crackling.databases.dtos.TeamDTO
 import com.crackling.resources.TeamResource
 import io.ktor.http.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.resources.*
 import io.ktor.server.resources.post
@@ -25,8 +27,9 @@ fun Route.configureTeamRouting() {
         call.respond(team)
     }
     post<TeamResource> {
+        val userMail = call.principal<JWTPrincipal>()!!.getClaim("email", String::class)!!
         val teamDTO = call.receive<TeamDTO>()
-        teamController.createTeam(teamDTO)
+        teamController.createTeam(teamDTO, userMail)
         call.respond(HttpStatusCode.Created, teamDTO)
     }
     put<TeamResource.Id> {

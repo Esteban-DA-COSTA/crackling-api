@@ -3,7 +3,9 @@ package com.crackling.controllers
 import com.crackling.builders.hateoas.*
 import com.crackling.databases.dtos.ListTeamDTO
 import com.crackling.databases.dtos.TeamDTO
+import com.crackling.databases.entities.MemberEntity
 import com.crackling.databases.entities.TeamEntity
+import com.crackling.databases.tables.Members
 import com.crackling.databases.tables.Teams
 import com.crackling.resources.HateoasLink
 import com.crackling.resources.HttpVerb.*
@@ -12,6 +14,7 @@ import com.crackling.resources.TaskResource
 import com.crackling.resources.TeamResource
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
+import org.jetbrains.exposed.v1.core.dao.id.CompositeID
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 class TeamController(private val app: Application) {
@@ -122,12 +125,19 @@ class TeamController(private val app: Application) {
      *
      * @param team The TeamDTO object containing the details of the team to create.
      */
-    fun createTeam(team: TeamDTO) = transaction {
+    fun createTeam(team: TeamDTO, userEmail: String) = transaction {
         val id = TeamEntity.new {
             this.name = team.name
             this.description = team.description
         }.id.value
         val teamResource = TeamResource.Id(teamId = id)
+        val memberId = CompositeID { 
+            it[Members.user] = userEmail
+            it[Members.team] = id
+        }
+        MemberEntity.new(memberId) { 
+            role = "owner"
+        }
         buildTeam(TeamEntity[id]) {
             action("self") {
                 protocol = GET
