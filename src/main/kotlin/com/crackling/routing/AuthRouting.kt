@@ -25,7 +25,9 @@ fun Route.configureAuthRouting() {
         return@post call.respond(userController.checkUser(email, password, jwtInfo))
     }
     post<AuthResource.Register> {
-        val (username, email, password) = call.receive<UserRegisterPayload>()
-        return@post call.respond(userController.createUser(UserDTO(email, username, password)))
+        val returnPayload = with(call.receive<UserRegisterPayload>()) {
+             userController.createUser(UserDTO(email, username, password), jwtInfo)
+        }
+        return@post call.respond(returnPayload)
     }
 }

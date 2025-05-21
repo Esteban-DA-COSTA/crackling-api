@@ -20,7 +20,7 @@ import java.util.*
 class UserController(private val app: Application) {
 
 
-    fun createUser(user: UserDTO) {
+    fun createUser(user: UserDTO, jwtInfo: JwtInfo): UserLoggedDTO {
         if (!validateEmail(user.email)) {
             throw InvalidFormatException()
         }
@@ -28,13 +28,14 @@ class UserController(private val app: Application) {
         val salt = generateSalt()
         val hashedPassword = hashPassword(user.password, salt)
 
-        transaction {
+        val user = transaction {
             UserEntity.new(user.email) {
                 username = user.username
                 password = hashedPassword
                 this.salt = salt
             }
         }
+        return buildTokenDto(user, jwtInfo)
     }
 
     /**
@@ -111,7 +112,7 @@ class UserController(private val app: Application) {
         return UserLoggedDTO(token).apply {
             addLinks(
                 "home" to (GET on app.href(TeamResource())),
-                "team" to (GET on app.href(TeamResource()))
+                "teams" to (GET on app.href(TeamResource()))
             )
         }
     }
