@@ -9,6 +9,7 @@ object Users: IdTable<String>() {
     val biography = varchar("biography", 255)
     val avatar = blob("avatar")
     val background = blob("background")
+//    val salt = varchar("_salt", 255)
     
     override val id = email
     override val primaryKey = PrimaryKey(email)

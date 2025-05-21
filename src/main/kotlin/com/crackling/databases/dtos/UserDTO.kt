@@ -13,3 +13,12 @@ data class UserDTO(val email: String, val username: String, @Transient val passw
         return this
     }
 }
+
+@Serializable
+data class UserLoggedDTO(val token: String): HateoasDTO {
+    override val _links: HateoasLinks = mutableMapOf()
+    override fun addLinks(vararg link: Pair<String, HateoasLink>): HateoasDTO {
+        _links.putAll(link)
+        return this
+    }
+}

@@ -14,7 +14,7 @@ import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
-class TeamController(private val application: Application) {
+class TeamController(private val app: Application) {
     //#region GET
     /**
      * Retrieves all teams from the database.
@@ -28,7 +28,7 @@ class TeamController(private val application: Application) {
                 team(teamEntity) {
                     action("self") {
                         protocol = GET
-                        href = application.href(TeamResource.Id(teamId = teamEntity.id.value))
+                        href = app.href(TeamResource.Id(teamId = teamEntity.id.value))
                     }
                 }
             }
@@ -44,9 +44,9 @@ class TeamController(private val application: Application) {
     fun getTeamByName(name: String) = transaction {
         TeamEntity.find { Teams.name eq name }.map { it.toDTO() }[0].apply {
             addLinks(
-                "self" to HateoasLink(GET, application.href(TeamResource.Id(teamId = this.id!!))),
-                "edit" to HateoasLink(PUT, application.href(TeamResource.Id(teamId = this.id!!))),
-                "delete" to HateoasLink(DELETE, application.href(TeamResource.Id(teamId = this.id!!)))
+                "self" to HateoasLink(GET, app.href(TeamResource.Id(teamId = this.id!!))),
+                "edit" to HateoasLink(PUT, app.href(TeamResource.Id(teamId = this.id!!))),
+                "delete" to HateoasLink(DELETE, app.href(TeamResource.Id(teamId = this.id!!)))
             )
         }
     }
@@ -63,7 +63,7 @@ class TeamController(private val application: Application) {
                         member(memberEntity) {
                             action("self") {
                                 protocol = GET
-                                href = application.href(
+                                href = app.href(
                                     MemberResource.Id(
                                         MemberResource(teamResource),
                                         memberEntity.user.email.value
@@ -74,11 +74,11 @@ class TeamController(private val application: Application) {
                     }
                     action("self") {
                         protocol = GET
-                        href = application.href(MemberResource(teamResource))
+                        href = app.href(MemberResource(teamResource))
                     }
                     action("add") {
                         protocol = POST
-                        href = application.href(MemberResource.Add(MemberResource(teamResource)))
+                        href = app.href(MemberResource.Add(MemberResource(teamResource)))
                     }
                 }
                 tasks {
@@ -86,7 +86,7 @@ class TeamController(private val application: Application) {
                         task(taskEntity) {
                             action("self") {
                                 protocol = GET
-                                href = application.href(
+                                href = app.href(
                                     TaskResource.Id(
                                         TaskResource(teamResource),
                                         taskEntity.id.value
@@ -99,15 +99,15 @@ class TeamController(private val application: Application) {
                 }
                 action("self") {
                     protocol = GET
-                    href = application.href(teamResource)
+                    href = app.href(teamResource)
                 }
                 action("edit") {
                     protocol = PUT
-                    href = application.href(teamResource)
+                    href = app.href(teamResource)
                 }
                 action("delete") {
                     protocol = DELETE
-                    href = application.href(teamResource)
+                    href = app.href(teamResource)
                 }
             }
         } catch (e: Exception) {
@@ -131,15 +131,15 @@ class TeamController(private val application: Application) {
         buildTeam(TeamEntity[id]) {
             action("self") {
                 protocol = GET
-                href = application.href(teamResource)
+                href = app.href(teamResource)
             }
             action("edit") {
                 protocol = PUT
-                href = application.href(teamResource)
+                href = app.href(teamResource)
             }
             action("delete") {
                 protocol = DELETE
-                href = application.href(teamResource)
+                href = app.href(teamResource)
             }
         }
     }
@@ -159,8 +159,8 @@ class TeamController(private val application: Application) {
         }
         team.apply {
             addLinks(
-                "self" to HateoasLink(GET, application.href(TeamResource.Id(teamId = id))),
-                "edit" to HateoasLink(PUT, application.href(TeamResource.Id(teamId = id)))
+                "self" to HateoasLink(GET, app.href(TeamResource.Id(teamId = id))),
+                "edit" to HateoasLink(PUT, app.href(TeamResource.Id(teamId = id)))
             )
         }
     }

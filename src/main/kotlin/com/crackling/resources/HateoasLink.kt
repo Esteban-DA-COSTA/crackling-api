@@ -10,3 +10,5 @@ typealias HateoasLinks = MutableMap<String, HateoasLink>
 data class HateoasLink(var protocol: HttpVerb, var href: String) {
     
 }
+
+infix fun String.on(protocol: HttpVerb): HateoasLink = HateoasLink(protocol, this)

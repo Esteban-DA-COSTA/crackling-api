@@ -34,7 +34,7 @@ fun Route.configureTeamRouting() {
         teamController.updateTeam(it.teamId, teamDTO)
         call.respond(HttpStatusCode.OK, teamDTO)
     }
-    delete<TeamResource.Id> { 
+    delete<TeamResource.Id> {
         teamController.deleteTeam(it.teamId)
     }
 }

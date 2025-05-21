@@ -5,6 +5,7 @@ import com.crackling.routing.configureTaskRouting
 import com.crackling.routing.configureTeamRouting
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.plugins.swagger.*
 import io.ktor.server.resources.*
@@ -19,14 +20,16 @@ fun Application.configureRouting() {
         }
     }
     routing {
-        
-        
+
+
         swaggerUI("/docs", "crackling_api_spec.yaml")
         get("/helloWorld") {
             call.respondText("Hello World!")
         }
-        configureTeamRouting()
-        configureMemberRouting()
-        configureTaskRouting()
+        authenticate {
+            configureTeamRouting()
+            configureMemberRouting()
+            configureTaskRouting()
+        }
     }
 }
