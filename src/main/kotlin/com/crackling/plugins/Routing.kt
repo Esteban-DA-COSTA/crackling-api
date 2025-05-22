@@ -8,7 +8,6 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.plugins.swagger.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -21,10 +20,6 @@ fun Application.configureRouting() {
         }
     }
     routing {
-        swaggerUI("/docs", "crackling_api_spec.yaml")
-        get("/helloWorld") {
-            call.respondText("Hello World!")
-        }
         configureAuthRouting()
         authenticate {
             configureTeamRouting()
