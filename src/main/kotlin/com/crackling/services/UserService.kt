@@ -2,13 +2,13 @@ package com.crackling.services
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.crackling.databases.dtos.UserDTO
-import com.crackling.databases.dtos.UserLoggedDTO
-import com.crackling.databases.entities.UserEntity
-import com.crackling.exceptions.InvalidFormatException
-import com.crackling.plugins.JwtInfo
-import com.crackling.resources.HttpVerb.GET
-import com.crackling.resources.TeamResource
+import com.crackling.api.plugins.JwtInfo
+import com.crackling.api.resources.HttpVerb.GET
+import com.crackling.api.resources.TeamResource
+import com.crackling.domain.entities.UserEntity
+import com.crackling.domain.models.user.UserDTO
+import com.crackling.domain.models.user.UserLoggedDTO
+import com.crackling.infrastructure.exceptions.InvalidFormatException
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.resources.*

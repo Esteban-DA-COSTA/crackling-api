@@ -1,8 +1,8 @@
 package com.crackling.services
 
-import com.crackling.databases.entities.MemberEntity
-import com.crackling.databases.tables.Members
-import com.crackling.routing.payloads.MemberAddPayload
+import com.crackling.api.routing.payloads.MemberAddPayload
+import com.crackling.domain.entities.MemberEntity
+import com.crackling.domain.tables.Members
 import org.jetbrains.exposed.v1.core.dao.id.CompositeID
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.jdbc.update

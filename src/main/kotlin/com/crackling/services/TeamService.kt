@@ -1,14 +1,15 @@
 package com.crackling.services
 
-import com.crackling.builders.hateoas.*
-import com.crackling.databases.dtos.ListTeamDTO
-import com.crackling.databases.dtos.TeamDTO
-import com.crackling.databases.entities.MemberEntity
-import com.crackling.databases.entities.TeamEntity
-import com.crackling.databases.tables.Members
-import com.crackling.databases.tables.Teams
-import com.crackling.resources.*
-import com.crackling.resources.HttpVerb.*
+import com.crackling.api.hateoas.HateoasLink
+import com.crackling.api.hateoas.builders.*
+import com.crackling.api.resources.*
+import com.crackling.api.resources.HttpVerb.*
+import com.crackling.domain.entities.MemberEntity
+import com.crackling.domain.entities.TeamEntity
+import com.crackling.domain.models.team.ListTeamDTO
+import com.crackling.domain.models.team.TeamDTO
+import com.crackling.domain.tables.Members
+import com.crackling.domain.tables.Teams
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import org.jetbrains.exposed.v1.core.dao.id.CompositeID
