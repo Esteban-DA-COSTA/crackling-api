@@ -15,5 +15,5 @@ jwt:
 database:
   url: "jdbc:sqlserver://192.168.1.100:1433;database=crackling"
   driver: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-  username: "crackling_user"
-  password: "cr@ssword"
+  username: $DB_USER
+  password: $DB_PASS
