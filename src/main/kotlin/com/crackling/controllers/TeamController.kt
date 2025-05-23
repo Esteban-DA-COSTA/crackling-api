@@ -167,16 +167,24 @@ class TeamController(private val app: Application) {
      * @param id The ID of the team to update.
      * @param team The TeamDTO object containing the updated details of the team.
      */
-    fun updateTeam(id: Int, team: TeamDTO) = transaction {
-        TeamEntity.findByIdAndUpdate(id) {
+    fun updateTeam(id: Int, team: TeamDTO): TeamDTO = transaction {
+        val entity = TeamEntity.findByIdAndUpdate(id) {
             it.name = team.name
             it.description = team.description
         }
-        team.apply {
-            addLinks(
-                "self" to HateoasLink(GET, app.href(TeamResource.Id(teamId = id))),
-                "edit" to HateoasLink(PUT, app.href(TeamResource.Id(teamId = id)))
-            )
+        buildTeam(entity) {
+            action("self") {
+                protocol = GET
+                href = app.href(TeamResource.Id(teamId = id))
+            }
+            action("edit") {
+                protocol = PUT
+                href = app.href(TeamResource.Id(teamId = id))
+            }
+            action("delete") {
+                protocol = DELETE
+                href = app.href(TeamResource.Id(teamId = id))
+            }
         }
     }
     //#endregion
