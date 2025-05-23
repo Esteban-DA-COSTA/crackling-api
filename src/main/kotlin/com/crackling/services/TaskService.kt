@@ -1,4 +1,4 @@
-package com.crackling.controllers
+package com.crackling.services
 
 import com.crackling.databases.dtos.ListTaskDTO
 import com.crackling.databases.entities.TaskEntity
@@ -13,7 +13,7 @@ import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
-class TaskController(private val application: Application) {
+class TaskService(private val application: Application) {
 
     fun getAllTasksOfTeam(self: TaskResource): ListTaskDTO = transaction {
         val teamId = self.parent.teamId

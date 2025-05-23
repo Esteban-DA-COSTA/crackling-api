@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
  * @property role the new member role.
  * 
  * @see com.crackling.routing.configureMemberRouting
- * @see com.crackling.controllers.MemberController.changeMemberRole
+ * @see com.crackling.services.MemberService.changeMemberRole
  */
 @Serializable
 data class MemberRolePayload(val role: String)
@@ -22,7 +22,7 @@ data class MemberRolePayload(val role: String)
  * @property role the role of the member inside the team.
  * 
  * @see com.crackling.routing.configureMemberRouting
- * @see com.crackling.controllers.MemberController.addMemberToTeam
+ * @see com.crackling.services.MemberService.addMemberToTeam
  */
 @Serializable
 data class MemberAddPayload(val email: String, val role: String)

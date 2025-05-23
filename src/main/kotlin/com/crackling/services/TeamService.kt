@@ -1,4 +1,4 @@
-package com.crackling.controllers
+package com.crackling.services
 
 import com.crackling.builders.hateoas.*
 import com.crackling.databases.dtos.ListTeamDTO
@@ -14,7 +14,7 @@ import io.ktor.server.resources.*
 import org.jetbrains.exposed.v1.core.dao.id.CompositeID
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
-class TeamController(private val app: Application) {
+class TeamService(private val app: Application) {
     //#region GET
     /**
      * Retrieves all teams from the database.

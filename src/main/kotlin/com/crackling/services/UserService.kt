@@ -1,4 +1,4 @@
-package com.crackling.controllers
+package com.crackling.services
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
@@ -17,7 +17,7 @@ import java.security.MessageDigest
 import java.security.SecureRandom
 import java.util.*
 
-class UserController(private val app: Application) {
+class UserService(private val app: Application) {
 
 
     fun createUser(user: UserDTO, jwtInfo: JwtInfo): UserLoggedDTO {
