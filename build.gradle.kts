@@ -2,6 +2,7 @@ val kotlin_version: String by project
 val logback_version: String by project
 val exposed_version: String by project
 val ktor_version: String by project
+val mockkVersion: String by project
 
 plugins {
     kotlin("jvm") version "2.1.10"
@@ -43,6 +44,8 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
-    testImplementation("io.ktor:ktor-server-test-host-jvm")
+    testImplementation("io.ktor:ktor-server-test-host-jvm:$ktor_version")
+    testImplementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    testImplementation("io.mockk:mockk:${mockkVersion}")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlin_version")
 }
