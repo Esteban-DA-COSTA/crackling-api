@@ -33,6 +33,7 @@ fun Application.configureSecurity() {
 fun Application.configureCORSPolicy() {
     install(CORS) {
         anyHost()
+        allowHeader(HttpHeaders.Authorization)
         allowHeader(HttpHeaders.ContentType)
         allowMethod(HttpMethod.Post)
         allowMethod(HttpMethod.Patch)
