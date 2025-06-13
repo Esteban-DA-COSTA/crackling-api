@@ -10,9 +10,11 @@ import com.crackling.domain.models.team.ListTeamDTO
 import com.crackling.domain.models.team.TeamDTO
 import com.crackling.domain.tables.Members
 import com.crackling.domain.tables.Teams
+import com.crackling.infrastructure.exceptions.ResourceNotFoundException
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import org.jetbrains.exposed.v1.core.dao.id.CompositeID
+import org.jetbrains.exposed.v1.dao.exceptions.EntityNotFoundException
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 class TeamService(private val app: Application) {
@@ -103,7 +105,7 @@ class TeamService(private val app: Application) {
                                 )
                             }
                         }
-
+    
                     }
                 }
                 action("self") {
@@ -119,9 +121,10 @@ class TeamService(private val app: Application) {
                     href = app.href(teamResource)
                 }
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (_: EntityNotFoundException) {
+            throw ResourceNotFoundException(id.toString())
         }
+
     }
     //#endregion
 
@@ -173,6 +176,9 @@ class TeamService(private val app: Application) {
             it.name = team.name
             it.description = team.description
         }
+        if (entity == null) {
+            throw ResourceNotFoundException(id.toString())
+        }
         buildTeam(entity) {
             action("self") {
                 protocol = GET
@@ -191,7 +197,8 @@ class TeamService(private val app: Application) {
     //#endregion
 
     fun deleteTeam(id: Int) = transaction {
-        TeamEntity[id].delete()
+        val entity = TeamEntity.findById(id) ?: throw ResourceNotFoundException(id.toString())
+        entity.delete()
     }
 
 }

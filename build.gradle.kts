@@ -48,4 +48,6 @@ dependencies {
     testImplementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     testImplementation("io.mockk:mockk:${mockkVersion}")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlin_version")
+    testImplementation("com.h2database:h2:2.2.224")
+
 }
