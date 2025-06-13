@@ -175,10 +175,7 @@ class TeamService(private val app: Application) {
         val entity = TeamEntity.findByIdAndUpdate(id) {
             it.name = team.name
             it.description = team.description
-        }
-        if (entity == null) {
-            throw ResourceNotFoundException(id.toString())
-        }
+        } ?: throw ResourceNotFoundException(id.toString())
         buildTeam(entity) {
             action("self") {
                 protocol = GET
