@@ -63,6 +63,15 @@ class TeamService(private val app: Application) {
                 members {
                     entity.members.forEach { memberEntity ->
                         member(memberEntity) {
+                            action("self") {
+                                protocol = GET
+                                href = app.href(
+                                    MemberResource.Id(
+                                        MemberResource(teamResource),
+                                        memberEntity.user.email.value
+                                    )
+                                )
+                            }
                             action("remove") {
                                 protocol = DELETE
                                 href = app.href(
@@ -86,6 +95,12 @@ class TeamService(private val app: Application) {
                                 )
                             }
                         }
+                        action("self") {
+                            protocol = GET
+                            href = app.href(MemberResource(teamResource)
+                            )
+                        }
+                        action("remove") {}
                     }
                     action("add") {
                         protocol = POST
