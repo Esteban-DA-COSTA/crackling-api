@@ -1,10 +1,12 @@
 package routing
 
 import com.crackling.api.routing.payloads.UserLoginPayload
+import com.crackling.api.routing.payloads.UserRegisterPayload
 import com.crackling.domain.entities.UserEntity
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.config.*
@@ -42,6 +44,32 @@ class AuthenticationTest {
         every { UserEntity.findById(correctUserEmail) } returns correctMockedEntity
         
         every { UserEntity.findById(neq(correctUserEmail)) } returns null
+        
+        // For register test
+        every { 
+            UserEntity.new(any()) { 
+                username = any()
+                password = any()
+                salt = any()
+            } 
+        } returns correctMockedEntity
+    }
+    
+    @Test
+    fun `should return hello message from auth endpoint`() = testApplication {
+        environment {
+            config = ApplicationConfig("application-test.yaml")
+        }
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+        
+        val response = client.get("/auth")
+        
+        assertEquals(HttpStatusCode.OK, response.status, "Status should be 200")
+        assertEquals("Hello from Auth", response.bodyAsText(), "Response should contain hello message")
     }
 
     @Test
@@ -87,5 +115,33 @@ class AuthenticationTest {
         
         verify { UserEntity.findById(correctUserEmail) }
     }
-
+    
+    @Test
+    fun `should register new user successfully`() = testApplication {
+        environment {
+            config = ApplicationConfig("application-test.yaml")
+        }
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+        
+        val username = "newuser"
+        val email = "new@user.com"
+        val password = "newpassword"
+        
+        val response = client.post("/auth/register") {
+            contentType(ContentType.Application.Json)
+            setBody(UserRegisterPayload(username, email, password))
+        }
+        
+        assertEquals(HttpStatusCode.OK, response.status, "Status should be 200")
+        assertContains(response.body<JsonObject>(), "token", "No token on response body")
+        
+        // Use a more flexible verification approach
+        verify { 
+            UserEntity.new(eq(email), any()) 
+        }
+    }
 }
