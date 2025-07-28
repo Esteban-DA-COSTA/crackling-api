@@ -8,4 +8,4 @@ package com.crackling.infrastructure.exceptions
  *
  * @param message A custom error message describing the invalid format; defaults to a predefined message.
  */
-class InvalidFormatException(message: String = "A format is incorrect."): Exception(message)
+class InvalidFormatException(message: String = "A format is incorrect."): CraklingApiException(message)

@@ -21,7 +21,7 @@ fun Route.configureMemberRouting() {
         return@post call.respond(HttpStatusCode.Created, member)
     }
     delete<MemberResource.Id.Remove> {
-        memberService.removeMemberFromTeam(it.member.email)
+        memberService.removeMemberFromTeam(it.member.members.team.teamId, it.member.email)
         return@delete call.respond(HttpStatusCode.OK)
     }
     patch<MemberResource.Id.Role> {

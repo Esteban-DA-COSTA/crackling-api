@@ -45,12 +45,16 @@ class TeamService(private val app: Application) {
      * @return A TeamDTO representing the team found by name.
      */
     fun getTeamByName(name: String) = transaction {
-        TeamEntity.find { Teams.name eq name }.map { it.toDTO() }[0].apply {
-            addLinks(
-                "self" to HateoasLink(GET, app.href(TeamResource.Id(teamId = this.id!!))),
-                "edit" to HateoasLink(PUT, app.href(TeamResource.Id(teamId = this.id!!))),
-                "delete" to HateoasLink(DELETE, app.href(TeamResource.Id(teamId = this.id!!)))
-            )
+        try {
+            TeamEntity.find { Teams.name eq name }.map { it.toDTO() }[0].apply {
+                addLinks(
+                    "self" to HateoasLink(GET, app.href(TeamResource.Id(teamId = this.id!!))),
+                    "edit" to HateoasLink(PUT, app.href(TeamResource.Id(teamId = this.id!!))),
+                    "delete" to HateoasLink(DELETE, app.href(TeamResource.Id(teamId = this.id!!)))
+                )
+            }
+        } catch (_: IndexOutOfBoundsException) {
+            throw ResourceNotFoundException(name)
         }
     }
 

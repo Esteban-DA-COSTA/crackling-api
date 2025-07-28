@@ -9,6 +9,7 @@ import com.crackling.domain.entities.UserEntity
 import com.crackling.domain.models.user.UserDTO
 import com.crackling.domain.models.user.UserLoggedDTO
 import com.crackling.infrastructure.exceptions.InvalidFormatException
+import com.crackling.infrastructure.exceptions.ResourceNotFoundException
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.resources.*
@@ -55,9 +56,9 @@ class UserService(private val app: Application) {
                 if (hashedPassword == user.password) {
                     return@transaction buildTokenDto(user, jwtInfo)
                 }
-                throw NotFoundException("Invalid credentials")
+                throw ResourceNotFoundException(email)
             }
-            throw NotFoundException("Invalid credentials")
+            throw ResourceNotFoundException(email)
         }
     }
 
