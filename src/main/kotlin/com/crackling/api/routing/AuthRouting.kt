@@ -5,7 +5,7 @@ import com.crackling.api.resources.AuthResource
 import com.crackling.api.routing.payloads.UserLoginPayload
 import com.crackling.api.routing.payloads.UserRegisterPayload
 import com.crackling.domain.models.user.UserDTO
-import com.crackling.services.UserService
+import com.crackling.domain.services.UserService
 import io.ktor.server.request.*
 import io.ktor.server.resources.*
 import io.ktor.server.resources.post

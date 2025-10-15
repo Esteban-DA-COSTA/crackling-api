@@ -1,4 +1,4 @@
-package com.crackling.domain.tables
+package com.crackling.infrastructure.database.tables
 
 import org.jetbrains.exposed.v1.core.dao.id.IntIdTable
 

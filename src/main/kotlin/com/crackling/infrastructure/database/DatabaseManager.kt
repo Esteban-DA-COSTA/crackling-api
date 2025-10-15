@@ -1,9 +1,9 @@
 package com.crackling.infrastructure.database
 
-import com.crackling.domain.tables.Members
-import com.crackling.domain.tables.Tasks
-import com.crackling.domain.tables.Teams
-import com.crackling.domain.tables.Users
+import com.crackling.infrastructure.database.tables.Members
+import com.crackling.infrastructure.database.tables.Tasks
+import com.crackling.infrastructure.database.tables.Teams
+import com.crackling.infrastructure.database.tables.Users
 import io.ktor.server.config.*
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils

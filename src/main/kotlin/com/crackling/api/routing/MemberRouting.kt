@@ -3,7 +3,7 @@ package com.crackling.api.routing
 import com.crackling.api.resources.MemberResource
 import com.crackling.api.routing.payloads.MemberAddPayload
 import com.crackling.api.routing.payloads.MemberRolePayload
-import com.crackling.services.MemberService
+import com.crackling.domain.services.MemberService
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.resources.*

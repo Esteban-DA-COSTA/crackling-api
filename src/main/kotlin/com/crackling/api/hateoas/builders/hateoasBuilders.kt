@@ -3,9 +3,9 @@ package com.crackling.api.hateoas.builders
 import com.crackling.api.hateoas.HateoasDTO
 import com.crackling.api.hateoas.HateoasLink
 import com.crackling.api.resources.HttpVerb
-import com.crackling.domain.entities.MemberEntity
-import com.crackling.domain.entities.TaskEntity
-import com.crackling.domain.entities.TeamEntity
+import com.crackling.infrastructure.database.entities.MemberEntity
+import com.crackling.infrastructure.database.entities.TaskEntity
+import com.crackling.infrastructure.database.entities.TeamEntity
 import com.crackling.domain.models.member.ListMembersDTO
 import com.crackling.domain.models.member.MemberDTO
 import com.crackling.domain.models.task.ListTaskDTO

@@ -1,8 +1,8 @@
-package com.crackling.domain.entities
+package com.crackling.infrastructure.database.entities
 
 import com.crackling.domain.models.user.UserDTO
-import com.crackling.domain.tables.Members
-import com.crackling.domain.tables.Users
+import com.crackling.infrastructure.database.tables.Members
+import com.crackling.infrastructure.database.tables.Users
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.Entity
 import org.jetbrains.exposed.v1.dao.EntityClass

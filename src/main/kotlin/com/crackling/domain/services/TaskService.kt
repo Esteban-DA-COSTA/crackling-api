@@ -1,14 +1,14 @@
-package com.crackling.services
+package com.crackling.domain.services
 
 import com.crackling.api.hateoas.HateoasLink
 import com.crackling.api.resources.HttpVerb
 import com.crackling.api.resources.TaskResource
 import com.crackling.api.routing.payloads.TaskAddPayload
-import com.crackling.domain.entities.TaskEntity
-import com.crackling.domain.entities.TeamEntity
-import com.crackling.domain.entities.UserEntity
+import com.crackling.infrastructure.database.entities.TaskEntity
+import com.crackling.infrastructure.database.entities.TeamEntity
+import com.crackling.infrastructure.database.entities.UserEntity
 import com.crackling.domain.models.task.ListTaskDTO
-import com.crackling.domain.tables.Tasks.team
+import com.crackling.infrastructure.database.tables.Tasks.team
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
