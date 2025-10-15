@@ -5,9 +5,9 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.crackling.api.plugins.JwtInfo
 import com.crackling.api.resources.HttpVerb.GET
 import com.crackling.api.resources.TeamResource
+import com.crackling.application.dtos.user.UserDTO
+import com.crackling.application.dtos.user.UserLoggedDTO
 import com.crackling.infrastructure.database.entities.UserEntity
-import com.crackling.domain.models.user.UserDTO
-import com.crackling.domain.models.user.UserLoggedDTO
 import com.crackling.infrastructure.exceptions.InvalidFormatException
 import com.crackling.infrastructure.exceptions.ResourceNotFoundException
 import io.ktor.server.application.*

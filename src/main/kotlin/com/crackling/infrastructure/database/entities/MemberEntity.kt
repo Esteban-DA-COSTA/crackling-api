@@ -1,6 +1,6 @@
 package com.crackling.infrastructure.database.entities
 
-import com.crackling.domain.models.member.MemberDTO
+import com.crackling.application.dtos.member.MemberDTO
 import com.crackling.infrastructure.database.tables.Members
 import com.crackling.infrastructure.database.tables.Tasks
 import org.jetbrains.exposed.v1.core.dao.id.CompositeID

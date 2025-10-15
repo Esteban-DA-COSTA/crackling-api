@@ -1,6 +1,6 @@
 package com.crackling
 
-import com.crackling.api.plugins.*
+import com.crackling.application.api.plugins.*
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {

@@ -1,9 +1,9 @@
 package routing
 
 import com.crackling.api.routing.payloads.UserLoginPayload
+import com.crackling.application.dtos.team.TeamDTO
 import com.crackling.domain.entities.TeamEntity
 import com.crackling.domain.entities.UserEntity
-import com.crackling.domain.models.team.TeamDTO
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
