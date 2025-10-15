@@ -36,3 +36,4 @@ out/
 .vscode/
 /myh2file.mv.db
 /myh2file.trace.db
+/httpRequests/http-client.private.env.json
