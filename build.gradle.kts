@@ -39,6 +39,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
+    implementation("com.h2database:h2:2.2.224")
     implementation("com.microsoft.sqlserver:mssql-jdbc:9.4.1.jre8")
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("ch.qos.logback:logback-classic:$logback_version")
