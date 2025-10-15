@@ -1,8 +1,8 @@
-package com.crackling.domain.entities
+package com.crackling.infrastructure.database.entities
 
 import com.crackling.domain.models.member.MemberDTO
-import com.crackling.domain.tables.Members
-import com.crackling.domain.tables.Tasks
+import com.crackling.infrastructure.database.tables.Members
+import com.crackling.infrastructure.database.tables.Tasks
 import org.jetbrains.exposed.v1.core.dao.id.CompositeID
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.CompositeEntity
@@ -14,7 +14,7 @@ class MemberEntity(id: EntityID<CompositeID>): CompositeEntity(id) {
     var user by UserEntity.Companion referencedOn Members.user
     var team by TeamEntity.Companion referencedOn Members.team
     var role by Members.role
-    val tasks by TaskEntity.Companion optionalReferrersOn Tasks.assignee
+    val tasks by TaskEntity optionalReferrersOn Tasks.assignee
     
     fun toDTO(withTeam: Boolean = false): MemberDTO = MemberDTO(
         user.toDTO(),

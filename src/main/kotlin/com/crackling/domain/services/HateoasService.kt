@@ -1,4 +1,4 @@
-package com.crackling.services
+package com.crackling.domain.services
 
 import io.ktor.server.application.*
 import io.ktor.server.resources.*

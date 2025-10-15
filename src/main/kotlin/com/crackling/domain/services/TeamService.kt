@@ -1,15 +1,15 @@
-package com.crackling.services
+package com.crackling.domain.services
 
 import com.crackling.api.hateoas.HateoasLink
 import com.crackling.api.hateoas.builders.*
 import com.crackling.api.resources.*
 import com.crackling.api.resources.HttpVerb.*
-import com.crackling.domain.entities.MemberEntity
-import com.crackling.domain.entities.TeamEntity
+import com.crackling.infrastructure.database.entities.MemberEntity
+import com.crackling.infrastructure.database.entities.TeamEntity
 import com.crackling.domain.models.team.ListTeamDTO
 import com.crackling.domain.models.team.TeamDTO
-import com.crackling.domain.tables.Members
-import com.crackling.domain.tables.Teams
+import com.crackling.infrastructure.database.tables.Members
+import com.crackling.infrastructure.database.tables.Teams
 import com.crackling.infrastructure.exceptions.ResourceNotFoundException
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
@@ -124,7 +124,11 @@ class TeamService(private val app: Application) {
                                 )
                             }
                         }
-    
+    }
+                }
+                sprints {
+                    entity.sprints.forEach { sprintEntity ->
+                        sprint(sprintEntity) {}
                     }
                 }
                 action("self") {

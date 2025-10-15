@@ -1,0 +1,11 @@
+### Create Team
+@teamName = Test Team 1
+@teamDescription = Test première teams
+POST {{apiUrl}}/teams
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "{{teamName}}",
+  "description": "{{teamDescription}}"
+}

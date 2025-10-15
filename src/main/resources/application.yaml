@@ -13,7 +13,8 @@ jwt:
   secret: "secret"
 
 database:
+  useH2: "$USE_H2:false"
   url: "jdbc:sqlserver://192.168.1.100:1433;database=crackling"
   driver: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-  username: $DB_USER
-  password: $DB_PASS
+  username: "$DB_USER:null"
+  password: "$DB_PASS:null"

@@ -2,7 +2,7 @@ package com.crackling.api.routing
 
 import com.crackling.api.resources.TaskResource
 import com.crackling.api.routing.payloads.TaskAddPayload
-import com.crackling.services.TaskService
+import com.crackling.domain.services.TaskService
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.resources.*

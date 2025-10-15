@@ -1,11 +1,11 @@
-package com.crackling.services
+package com.crackling.domain.services
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.crackling.api.plugins.JwtInfo
 import com.crackling.api.resources.HttpVerb.GET
 import com.crackling.api.resources.TeamResource
-import com.crackling.domain.entities.UserEntity
+import com.crackling.infrastructure.database.entities.UserEntity
 import com.crackling.domain.models.user.UserDTO
 import com.crackling.domain.models.user.UserLoggedDTO
 import com.crackling.infrastructure.exceptions.InvalidFormatException

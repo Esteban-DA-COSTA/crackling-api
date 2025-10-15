@@ -2,7 +2,7 @@ package com.crackling.api.routing
 
 import com.crackling.api.resources.TeamResource
 import com.crackling.domain.models.team.TeamDTO
-import com.crackling.services.TeamService
+import com.crackling.domain.services.TeamService
 import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
