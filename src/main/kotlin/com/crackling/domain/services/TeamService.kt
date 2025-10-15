@@ -106,7 +106,11 @@ class TeamService(private val app: Application) {
 
                     }
                 }
-                sp
+                sprints {
+                    entity.sprints.forEach { sprintEntity ->
+                        sprint(sprintEntity) {}
+                    }
+                }
                 action("self") {
                     protocol = GET
                     href = app.href(teamResource)
