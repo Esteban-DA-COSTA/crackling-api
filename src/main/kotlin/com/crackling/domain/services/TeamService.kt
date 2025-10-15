@@ -106,6 +106,7 @@ class TeamService(private val app: Application) {
 
                     }
                 }
+                sp
                 action("self") {
                     protocol = GET
                     href = app.href(teamResource)

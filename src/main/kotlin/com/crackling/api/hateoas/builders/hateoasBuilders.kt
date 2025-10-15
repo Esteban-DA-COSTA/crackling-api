@@ -25,25 +25,6 @@ fun buildTeam(entity: TeamEntity? = null, init: (TeamDTO.() -> Unit)): TeamDTO {
     return team
 }
 
-fun ListTeamDTO.team(entity: TeamEntity? = null, init: (TeamDTO.() -> Unit)): TeamDTO {
-    val team = entity?.toDTO() ?: TeamDTO(null, "", "")
-    team.init()
-    list.add(team)
-    return team
-}
-
-fun TeamDTO.members(init: (ListMembersDTO.() -> Unit)): ListMembersDTO {
-    members = ListMembersDTO()
-    members!!.init()
-    return members!!
-}
-
-fun TeamDTO.tasks(init: (ListTaskDTO.() -> Unit)): ListTaskDTO {
-    tasks = ListTaskDTO()
-    tasks!!.init()
-    return tasks!!
-}
-
 fun ListMembersDTO.member(member: MemberEntity, init: (MemberDTO.() -> Unit)): ListMembersDTO {
     list.add(member.toDTO().also { it.init() })
     return this

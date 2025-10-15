@@ -14,7 +14,7 @@ class MemberEntity(id: EntityID<CompositeID>): CompositeEntity(id) {
     var user by UserEntity.Companion referencedOn Members.user
     var team by TeamEntity.Companion referencedOn Members.team
     var role by Members.role
-    val tasks by TaskEntity.Companion optionalReferrersOn Tasks.assignee
+    val tasks by TaskEntity optionalReferrersOn Tasks.assignee
     
     fun toDTO(withTeam: Boolean = false): MemberDTO = MemberDTO(
         user.toDTO(),

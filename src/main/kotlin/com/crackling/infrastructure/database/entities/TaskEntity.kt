@@ -14,7 +14,7 @@ class TaskEntity(id: EntityID<Int>) : IntEntity(id) {
     var completed by Tasks.completed
     var team by TeamEntity.Companion referencedOn Tasks.team
     var userPoints by Tasks.userPoints
-    var assignee by UserEntity.Companion optionalReferencedOn Tasks.assignee
+    var assignee by UserEntity optionalReferencedOn Tasks.assignee
 
     fun toDTO(addTeam: Boolean = false, addMember: Boolean = false) = 
         TaskDTO(

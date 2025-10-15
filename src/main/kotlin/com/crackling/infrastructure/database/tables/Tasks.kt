@@ -9,5 +9,7 @@ object Tasks: IntIdTable() {
     val team = reference("team", Teams)
     val userPoints = integer("userPoints")
     val assignee = optReference("assignee", Users)
+
+    val onSprint = optReference("sprint", Sprints)
     
 }
