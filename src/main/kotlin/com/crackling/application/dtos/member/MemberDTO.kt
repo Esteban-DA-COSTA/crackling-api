@@ -1,7 +1,7 @@
 package com.crackling.application.dtos.member
 
-import com.crackling.api.hateoas.HateoasDTO
-import com.crackling.api.hateoas.HateoasLinks
+import com.crackling.application.api.hateoas.HateoasDTO
+import com.crackling.application.api.hateoas.HateoasLinks
 import com.crackling.application.dtos.team.TeamDTO
 import com.crackling.application.dtos.user.UserDTO
 import kotlinx.serialization.Serializable

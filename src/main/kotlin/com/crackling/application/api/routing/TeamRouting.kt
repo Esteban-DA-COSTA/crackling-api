@@ -1,7 +1,9 @@
 package com.crackling.application.api.routing
 
-import com.crackling.api.resources.TeamResource
+import com.crackling.application.api.resources.TeamResource
 import com.crackling.application.dtos.team.TeamDTO
+import com.crackling.application.mappers.buildTeamDto
+import com.crackling.application.mappers.buildTeamListDto
 import com.crackling.domain.services.TeamService
 import io.ktor.http.*
 import io.ktor.server.auth.*
@@ -15,16 +17,20 @@ import io.ktor.server.routing.*
 
 
 fun Route.configureTeamRouting() {
-    val teamService = TeamService(this.application)
+    val teamService = TeamService()
     get<TeamResource> {
-        if (it.name != null)
-            call.respond(teamService.getTeamByName(it.name))
-        else
-            call.respond(teamService.getAllTeams())
+        if (it.name != null) {
+            val team = teamService.getTeamByName(it.name)
+            call.respond(buildTeamDto(team))
+        }
+        else{
+            val teams = teamService.getAllTeams()
+            call.respond(buildTeamListDto(teams))
+        }
     }
     get<TeamResource.Id> {
         val team = teamService.getTeamById(it.teamId)
-        call.respond(team)
+        call.respond(buildTeamDto(team))
     }
     post<TeamResource> {
         val userMail = call.principal<JWTPrincipal>()!!.getClaim("email", String::class)!!

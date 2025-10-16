@@ -3,6 +3,9 @@ package com.crackling.application.dtos.user
 import com.crackling.api.hateoas.HateoasDTO
 import com.crackling.api.hateoas.HateoasLink
 import com.crackling.api.hateoas.HateoasLinks
+import com.crackling.application.api.hateoas.HateoasDTO
+import com.crackling.application.api.hateoas.HateoasLink
+import com.crackling.application.api.hateoas.HateoasLinks
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 

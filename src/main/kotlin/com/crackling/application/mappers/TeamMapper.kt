@@ -1,128 +1,57 @@
 package com.crackling.application.mappers
 
-import com.crackling.application.api.hateoas.builders.*
 import com.crackling.application.api.resources.*
-import com.crackling.application.api.resources.HttpVerb.*
 import com.crackling.application.dtos.team.ListTeamDTO
 import com.crackling.application.dtos.team.TeamDTO
-import com.crackling.infrastructure.database.entities.TeamEntity
+import com.crackling.domain.models.Team
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
 
-class TeamMapper() {
 
-    context(app: Application)
-    fun buildShallowTeam(entity: TeamEntity): TeamDTO = buildTeam(entity) {
-        action("self") {
-            protocol = GET
-            href = app.href(TeamResource.Id(teamId = entity.id.value))
-        }
-        action("edit") {
-            protocol = PUT
-            href = app.href(TeamResource.Id(teamId = entity.id.value))
-        }
-        action("delete") {
-            protocol = DELETE
-            href = app.href(TeamResource.Id(teamId = entity.id.value))
-        }
-    }
+context(app: Application)
+fun buildTeamDto(team: Team, config: (TeamBuilderScope.() -> Unit) = {}): TeamDTO {
+    val resource = TeamResource.Id(teamId = team.id!!)
 
-    context(app: Application)
-    fun buildTeamList(entities: List<TeamEntity>): ListTeamDTO = buildTeamList {
-        entities.forEach { teamEntity ->
-            team(teamEntity) {
-                action("self") {
-                    protocol = GET
-                    href = app.href(TeamResource.Id(teamId = teamEntity.id.value))
-                }
-            }
+    val configScope = TeamBuilderScope().apply(config)
+    val membersDto = if (configScope.includeMembers) buildMemberListDto(team.members!!, team.id) else null
+    return TeamDTO(team.id, team.name, team.description).apply {
+        addAction("self") {
+            protocol = HttpVerb.GET
+            href = app.href(resource)
         }
-    }
-
-    context(app: Application)
-    fun buildCompleteTeam(entity: TeamEntity): TeamDTO {
-        val teamResource = TeamResource.Id(teamId = entity.id.value)
-        return buildTeam(entity) {
-            members {
-                entity.members.forEach { memberEntity ->
-                    member(memberEntity) {
-                        action("self") {
-                            protocol = GET
-                            href = app.href(
-                                MemberResource.Id(
-                                    MemberResource(teamResource),
-                                    memberEntity.user.email.value
-                                )
-                            )
-                        }
-                        action("remove") {
-                            protocol = DELETE
-                            href = app.href(
-                                MemberRemovalResource(
-                                    MemberResource.Id(
-                                        MemberResource(teamResource),
-                                        memberEntity.user.email.value
-                                    )
-                                )
-                            )
-                        }
-                        action("changeRole") {
-                            protocol = PATCH
-                            href = app.href(
-                                MemberRoleResource(
-                                    MemberResource.Id(
-                                        MemberResource(teamResource),
-                                        memberEntity.user.email.value
-                                    )
-                                )
-                            )
-                        }
-                    }
-                    action("self") {
-                        protocol = GET
-                        href = app.href(
-                            MemberResource(teamResource)
-                        )
-                    }
-                    action("remove") {}
-                }
-                action("add") {
-                    protocol = POST
-                    href = app.href(MemberResource.Add(MemberResource(teamResource)))
-                }
-            }
-            tasks {
-                entity.tasks.forEach { taskEntity ->
-                    task(taskEntity) {
-                        action("self") {
-                            protocol = GET
-                            href = app.href(
-                                TaskResource.Id(
-                                    TaskResource(teamResource),
-                                    taskEntity.id.value
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-            sprints {
-                entity.sprints.forEach { sprintEntity ->
-                    sprint(sprintEntity) {}
-                }
-            }
-            action("self") {
-                protocol = GET
-                href = app.href(teamResource)
-            }
-            action("edit") {
-                protocol = PUT
-                href = app.href(teamResource)
-            }
-            action("delete") {
-                protocol = DELETE
-                href = app.href(teamResource)
-            }
+        addAction("update") {
+            protocol = HttpVerb.PUT
+            href = app.href(resource)
+        }
+        addAction("delete") {
+            protocol = HttpVerb.DELETE
+            href = app.href(resource)
+        }
+        addAction("members") {
+            protocol = HttpVerb.GET
+            href = app.href(MemberResource(resource))
+        }
+        addAction("tasks") {
+            protocol = HttpVerb.GET
+            href = app.href(TaskResource(resource))
         }
     }
 }
+
+context(app: Application)
+fun buildTeamListDto(teams: List<Team>): ListTeamDTO {
+    val resource = TeamResource()
+    val buildList = teams.map { buildTeamDto(it) }.toMutableList()
+    val teamsDto = ListTeamDTO(buildList).apply {
+        addAction("self") {
+            protocol = HttpVerb.GET
+            href = app.href(resource)
+        }
+        addAction("create") {
+            protocol = HttpVerb.POST
+            href = app.href(resource)
+        }
+    }
+}
+
+class TeamBuilderScope(var includeMembers: Boolean = false, var includeTasks: Boolean = false)

@@ -5,8 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.crackling.api.plugins.JwtInfo
 import com.crackling.api.resources.HttpVerb.GET
 import com.crackling.api.resources.TeamResource
-import com.crackling.application.dtos.user.UserDTO
 import com.crackling.application.dtos.user.UserLoggedDTO
+import com.crackling.domain.models.User
 import com.crackling.infrastructure.database.entities.UserEntity
 import com.crackling.infrastructure.exceptions.InvalidFormatException
 import com.crackling.infrastructure.exceptions.ResourceNotFoundException
@@ -21,7 +21,7 @@ import java.util.*
 class UserService(private val app: Application) {
 
 
-    fun createUser(user: UserDTO, jwtInfo: JwtInfo): UserLoggedDTO {
+    fun createUser(user: User): User {
         if (!validateEmail(user.email)) {
             throw InvalidFormatException()
         }
@@ -29,14 +29,14 @@ class UserService(private val app: Application) {
         val salt = generateSalt()
         val hashedPassword = hashPassword(user.password, salt)
 
-        val user = transaction {
+        val userEntity = transaction {
             UserEntity.new(user.email) {
                 username = user.username
                 password = hashedPassword
                 this.salt = salt
             }
         }
-        return buildTokenDto(user, jwtInfo)
+        return userEntity
     }
 
     /**
@@ -48,17 +48,14 @@ class UserService(private val app: Application) {
      * @return A [UserLoggedDTO] containing the generated JWT token if the credentials are valid.
      * @throws NotFoundException If the user with specified email and password is not found.
      */
-    fun checkUser(email: String, password: String, jwtInfo: JwtInfo): UserLoggedDTO {
+    fun checkUser(email: String, password: String): Boolean {
         return transaction {
             val user = UserEntity.findById(email)
             if (user != null) {
                 val hashedPassword = hashPassword(password, user.salt)
-                if (hashedPassword == user.password) {
-                    return@transaction buildTokenDto(user, jwtInfo)
-                }
-                throw ResourceNotFoundException(email)
+                return@transaction hashedPassword == user.password
             }
-            throw ResourceNotFoundException(email)
+            return@transaction false
         }
     }
 
@@ -98,24 +95,5 @@ class UserService(private val app: Application) {
         return Base64.getEncoder().encodeToString(messageDigest.digest(input))
     }
 
-    /**
-     * Builds a Dto to return after a successful login.
-     *
-     * @param user The user for whom the token is being generated.
-     * @param jwtInfo An object containing JWT configuration details such as issuer, audience, and secret.
-     * @return A [UserLoggedDTO] containing the generated JWT token and associated links.
-     */
-    private fun buildTokenDto(user: UserEntity, jwtInfo: JwtInfo): UserLoggedDTO {
-        val token = JWT.create()
-            .withAudience(jwtInfo.audience)
-            .withIssuer(jwtInfo.issuer)
-            .withClaim("email", user.email.value)
-            .sign(Algorithm.HMAC256(jwtInfo.secret))
-        return UserLoggedDTO(token).apply {
-            addLinks(
-                "home" to (GET on app.href(TeamResource())),
-                "teams" to (GET on app.href(TeamResource()))
-            )
-        }
-    }
+
 }

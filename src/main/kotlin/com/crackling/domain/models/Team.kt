@@ -6,11 +6,13 @@ import com.crackling.infrastructure.database.entities.TeamEntity
 class Team(
     val id: Int? = null,
     var name: String = "",
-    var description: String = ""
+    var description: String = "",
+    var members: MutableList<Member>? = null
 ) {
     constructor(entity: TeamEntity) : this(
         id = entity.id.value,
         name = entity.name,
-        description = entity.description
+        description = entity.description,
+        members = null
     )
 }

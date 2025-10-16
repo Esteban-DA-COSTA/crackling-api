@@ -18,9 +18,18 @@ class TeamService() {
      *
      * @return a list of TeamDTO representing all teams.
      */
-    fun getAllTeams(): List<TeamEntity> = transaction {
-        TeamEntity.all().toList()
+    fun getAllTeams(): List<Team> {
+        transaction {
+            TeamEntity.all().toList()
+        }.also {
+            return buildList {
+                it.forEach { entity ->
+                    this.add(Team(entity))
+                }
+            }
+        }
     }
+
 
     /**
      * Retrieves a team from the database by its name.
@@ -28,12 +37,16 @@ class TeamService() {
      * @param name The name of the team to retrieve.
      * @return A TeamDTO representing the team found by name.
      */
-    fun getTeamByName(name: String): TeamEntity = transaction {
-        TeamEntity.find { Teams.name eq name }.firstOrNull() ?: throw ResourceNotFoundException(name)
+    fun getTeamByName(name: String): Team {
+        transaction {
+            TeamEntity.find { Teams.name eq name }.firstOrNull() ?: throw ResourceNotFoundException(name)
+        }.also { return Team(it) }
     }
 
-    fun getTeamById(id: Int): TeamEntity = transaction {
+    fun getTeamById(id: Int): Team {
+        transaction {
             TeamEntity.findById(id) ?: throw ResourceNotFoundException(id.toString())
+        }.also { return Team(it) }
     }
     //#endregion
 
@@ -43,19 +56,21 @@ class TeamService() {
      *
      * @param team The TeamDTO object containing the details of the team to create.
      */
-    fun createTeam(team: Team, userEmail: String): TeamEntity = transaction {
-        val entity = TeamEntity.new {
-            this.name = team.name
-            this.description = team.description
-        }
-        val memberId = CompositeID {
-            it[Members.user] = userEmail
-            it[Members.team] = entity.id
-        }
-        MemberEntity.new(memberId) {
-            role = "owner"
-        }
-        entity
+    fun createTeam(team: Team, userEmail: String): Team {
+        transaction {
+            val entity = TeamEntity.new {
+                this.name = team.name
+                this.description = team.description
+            }
+            val memberId = CompositeID {
+                it[Members.user] = userEmail
+                it[Members.team] = entity.id
+            }
+            MemberEntity.new(memberId) {
+                role = "owner"
+            }
+            entity
+        }.also { return Team(it) }
     }
     //#endregion
 
@@ -66,11 +81,13 @@ class TeamService() {
      * @param id The ID of the team to update.
      * @param team The TeamDTO object containing the updated details of the team.
      */
-    fun updateTeam(id: Int, team: TeamDTO): TeamEntity = transaction {
-        TeamEntity.findByIdAndUpdate(id) {
-            it.name = team.name
-            it.description = team.description
-        } ?: throw ResourceNotFoundException(id.toString())
+    fun updateTeam(id: Int, team: Team): Team {
+        transaction {
+            TeamEntity.findByIdAndUpdate(id) {
+                it.name = team.name
+                it.description = team.description
+            } ?: throw ResourceNotFoundException(id.toString())
+        }.also { return Team(it) }
     }
     //#endregion
 
