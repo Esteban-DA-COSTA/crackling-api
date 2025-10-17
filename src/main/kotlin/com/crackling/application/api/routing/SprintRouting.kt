@@ -1,6 +1,6 @@
 package com.crackling.application.api.routing
 
-import com.crackling.api.resources.SprintResource
+import com.crackling.application.api.resources.SprintResource
 import com.crackling.domain.services.SprintService
 import io.ktor.server.resources.get
 import io.ktor.server.response.*
@@ -13,7 +13,7 @@ fun Route.configureSprintRouting() {
     route("/sprints") {
         get<SprintResource> {
             val teamId = it.parent.teamId
-            call.respond(sprintService.getAllSprintsOfTeam(teamId))
+//            call.respond(sprintService.getAllSprintsOfTeam(teamId))
         }
     }
 

@@ -9,3 +9,8 @@ Authorization: Bearer {{token}}
   "name": "{{teamName}}",
   "description": "{{teamDescription}}"
 }
+
+### Get All
+@teamId = 1
+GET localhost:8080/teams/{{teamId}}
+Authorization: Bearer {{token}}

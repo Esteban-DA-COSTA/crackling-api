@@ -1,6 +1,7 @@
 package com.crackling.application.api.resources
 
-import com.crackling.api.hateoas.HateoasLink
+
+import com.crackling.application.api.hateoas.HateoasLink
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 val kotlin_version: String by project
 val logback_version: String by project
 val exposed_version: String by project
@@ -5,9 +7,9 @@ val ktor_version: String by project
 val mockkVersion: String by project
 
 plugins {
-    kotlin("jvm") version "2.1.10"
-    id("io.ktor.plugin") version "3.1.0"
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
+    kotlin("jvm") version "2.2.0"
+    id("io.ktor.plugin") version "3.1.3"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
 }
 
 group = "com.crackling"
@@ -22,6 +24,12 @@ application {
 
 repositories {
     mavenCentral()
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xcontext-parameters")
+    }
 }
 
 dependencies {

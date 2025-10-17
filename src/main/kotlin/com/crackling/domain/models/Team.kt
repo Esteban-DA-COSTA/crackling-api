@@ -9,10 +9,19 @@ class Team(
     var description: String = "",
     var members: MutableList<Member>? = null
 ) {
-    constructor(entity: TeamEntity) : this(
-        id = entity.id.value,
-        name = entity.name,
-        description = entity.description,
-        members = null
-    )
+    companion object {
+        fun fromEntity(entity: TeamEntity, config: TeamConfiguration = {}): Team {
+            val teamConfig = TeamConfig().apply(config)
+            return Team(
+                entity.id.value,
+                entity.name,
+                entity.description,
+                if (teamConfig.includeMembers) entity.members.map { Member.fromEntity(it) }.toMutableList() else null
+            )
+        }
+    }
+
+    class TeamConfig(var includeMembers: Boolean = false, var includeSprints: Boolean = false)
 }
+
+typealias TeamConfiguration = Team.TeamConfig.() -> Unit

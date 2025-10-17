@@ -1,8 +1,9 @@
 package com.crackling.application.api.routing
 
-import com.crackling.api.resources.MemberResource
-import com.crackling.api.routing.payloads.MemberAddPayload
-import com.crackling.api.routing.payloads.MemberRolePayload
+
+import com.crackling.application.api.resources.MemberResource
+import com.crackling.application.api.routing.payloads.MemberAddPayload
+import com.crackling.application.api.routing.payloads.MemberRolePayload
 import com.crackling.domain.services.MemberService
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -17,7 +18,7 @@ fun Route.configureMemberRouting() {
     
     post<MemberResource.Add> {
         val member = call.receive<MemberAddPayload>()
-        memberService.addMemberToTeam(it.members.team.teamId, member)
+//        memberService.addMemberToTeam(it.members.team.teamId, member)
         return@post call.respond(HttpStatusCode.Created, member)
     }
     delete<MemberResource.Id.Remove> {
@@ -26,7 +27,7 @@ fun Route.configureMemberRouting() {
     }
     patch<MemberResource.Id.Role> {
         val newRole = call.receive<MemberRolePayload>().role
-        memberService.changeMemberRole(it.member.email, newRole)
+//        memberService.changeMemberRole(it.member.email, newRole)
         return@patch call.respond(HttpStatusCode.OK)
     }
 }

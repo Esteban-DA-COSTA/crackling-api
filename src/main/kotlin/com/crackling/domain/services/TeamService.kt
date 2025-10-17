@@ -24,7 +24,7 @@ class TeamService() {
         }.also {
             return buildList {
                 it.forEach { entity ->
-                    this.add(Team(entity))
+                    this.add(Team.fromEntity(entity))
                 }
             }
         }
@@ -40,13 +40,21 @@ class TeamService() {
     fun getTeamByName(name: String): Team {
         transaction {
             TeamEntity.find { Teams.name eq name }.firstOrNull() ?: throw ResourceNotFoundException(name)
-        }.also { return Team(it) }
+        }.also {
+            return Team.fromEntity(it) {
+                includeMembers = true
+            }
+        }
     }
 
     fun getTeamById(id: Int): Team {
         transaction {
             TeamEntity.findById(id) ?: throw ResourceNotFoundException(id.toString())
-        }.also { return Team(it) }
+        }.also {
+            return Team.fromEntity(it) {
+                includeMembers = true
+            }
+        }
     }
     //#endregion
 
@@ -70,7 +78,7 @@ class TeamService() {
                 role = "owner"
             }
             entity
-        }.also { return Team(it) }
+        }.also { return Team.fromEntity(it) }
     }
     //#endregion
 
@@ -87,7 +95,7 @@ class TeamService() {
                 it.name = team.name
                 it.description = team.description
             } ?: throw ResourceNotFoundException(id.toString())
-        }.also { return Team(it) }
+        }.also { return Team.fromEntity(it) }
     }
     //#endregion
 

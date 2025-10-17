@@ -3,8 +3,10 @@ package com.crackling.application.mappers
 import com.crackling.application.api.resources.*
 import com.crackling.application.dtos.member.ListMembersDTO
 import com.crackling.application.dtos.member.MemberDTO
+import com.crackling.application.dtos.team.TeamDTO
 import com.crackling.application.dtos.user.UserDTO
 import com.crackling.domain.models.Member
+import com.crackling.domain.models.Team
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
 
@@ -16,6 +18,7 @@ fun buildMemberDto(member: Member, teamId: Int): MemberDTO {
     )
     val dto = MemberDTO(
         user = UserDTO(member.user.email, member.user.username),
+        team = member.team?.let { TeamDTO(it.id, it.name, it.description) },
         role = member.role
     ).apply {
         addAction("self") {
@@ -38,7 +41,7 @@ context(app: Application)
 fun buildMemberListDto(members: List<Member>, teamId: Int): ListMembersDTO {
     val resource = MemberResource(TeamResource.Id(teamId = teamId))
     val list = members.map { buildMemberDto(it, teamId) }.toMutableList()
-    val dto = ListMembersDTO(list).apply {
+    return ListMembersDTO(list).apply {
         addAction("self") {
             protocol = HttpVerb.GET
             href = app.href(resource)

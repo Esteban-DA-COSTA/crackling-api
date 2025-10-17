@@ -1,10 +1,5 @@
 package com.crackling.domain.services
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
-import com.crackling.api.plugins.JwtInfo
-import com.crackling.api.resources.HttpVerb.GET
-import com.crackling.api.resources.TeamResource
 import com.crackling.application.dtos.user.UserLoggedDTO
 import com.crackling.domain.models.User
 import com.crackling.infrastructure.database.entities.UserEntity
@@ -12,7 +7,6 @@ import com.crackling.infrastructure.exceptions.InvalidFormatException
 import com.crackling.infrastructure.exceptions.ResourceNotFoundException
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
-import io.ktor.server.resources.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -36,7 +30,7 @@ class UserService(private val app: Application) {
                 this.salt = salt
             }
         }
-        return userEntity
+        return User.fromEntity(userEntity)
     }
 
     /**
@@ -49,13 +43,11 @@ class UserService(private val app: Application) {
      * @throws NotFoundException If the user with specified email and password is not found.
      */
     fun checkUser(email: String, password: String): Boolean {
-        return transaction {
-            val user = UserEntity.findById(email)
-            if (user != null) {
-                val hashedPassword = hashPassword(password, user.salt)
-                return@transaction hashedPassword == user.password
-            }
-            return@transaction false
+        transaction {
+            UserEntity.findById(email) ?: throw ResourceNotFoundException(email)
+        }.also { user ->
+            val hashedPassword = hashPassword(password, user.salt)
+            return hashedPassword == user.password
         }
     }
 

@@ -7,9 +7,9 @@ class User(
     val email: String,
     var password: String
 ) {
-    constructor(entity: UserEntity) : this(
-        username = entity.username,
-        email = entity.email.value,
-        password = entity.password
-    )
+    companion object {
+        fun fromEntity(entity: UserEntity): User {
+            return User(entity.username, entity.email.value, entity.password)
+        }
+    }
 }

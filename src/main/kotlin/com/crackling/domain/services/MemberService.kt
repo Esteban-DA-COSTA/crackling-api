@@ -24,7 +24,11 @@ class MemberService() {
             MemberEntity.new(memberId) {
                 role = member.role
             }
-        }.also { return Member(it) }
+        }.also {
+            return Member.fromEntity(it) {
+                includeTeam = true
+            }
+        }
     }
 
     fun removeMemberFromTeam(teamId: Int, memberMail: String) = transaction {
@@ -44,7 +48,11 @@ class MemberService() {
             MemberEntity.findByIdAndUpdate(memberId) {
                 it.role = newRole
             } ?: throw ResourceNotFoundException(memberEmail)
-        }.also { return Member(it) }
+        }.also {
+            return Member.fromEntity(it) {
+                includeTeam = true
+            }
+        }
     }
 
 }

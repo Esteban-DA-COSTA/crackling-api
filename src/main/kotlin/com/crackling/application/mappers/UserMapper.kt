@@ -26,9 +26,13 @@ fun buildTokenDto(user: User, jwtInfo: JwtInfo): UserLoggedDTO {
         .withClaim("email", user.email)
         .sign(Algorithm.HMAC256(jwtInfo.secret))
     return UserLoggedDTO(token).apply {
-        addLinks(
-            "home" to (GET on app.href(TeamResource())),
-            "teams" to (GET on app.href(TeamResource()))
-        )
+        addAction("home") {
+            protocol = GET
+            href = app.href(TeamResource())
+        }
+        addAction("teams") {
+            protocol = GET
+            href = app.href(TeamResource())
+        }
     }
 }

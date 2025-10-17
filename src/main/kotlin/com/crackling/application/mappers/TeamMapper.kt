@@ -9,12 +9,14 @@ import io.ktor.server.resources.*
 
 
 context(app: Application)
-fun buildTeamDto(team: Team, config: (TeamBuilderScope.() -> Unit) = {}): TeamDTO {
+fun buildTeamDto(team: Team): TeamDTO {
     val resource = TeamResource.Id(teamId = team.id!!)
-
-    val configScope = TeamBuilderScope().apply(config)
-    val membersDto = if (configScope.includeMembers) buildMemberListDto(team.members!!, team.id) else null
-    return TeamDTO(team.id, team.name, team.description).apply {
+    return TeamDTO(
+        team.id,
+        team.name,
+        team.description,
+        team.members?.let { buildMemberListDto(it, team.id) },
+    ).apply {
         addAction("self") {
             protocol = HttpVerb.GET
             href = app.href(resource)
@@ -42,7 +44,7 @@ context(app: Application)
 fun buildTeamListDto(teams: List<Team>): ListTeamDTO {
     val resource = TeamResource()
     val buildList = teams.map { buildTeamDto(it) }.toMutableList()
-    val teamsDto = ListTeamDTO(buildList).apply {
+    return ListTeamDTO(buildList).apply {
         addAction("self") {
             protocol = HttpVerb.GET
             href = app.href(resource)
@@ -54,4 +56,5 @@ fun buildTeamListDto(teams: List<Team>): ListTeamDTO {
     }
 }
 
-class TeamBuilderScope(var includeMembers: Boolean = false, var includeTasks: Boolean = false)
+
+fun parseTeam(dto: TeamDTO) = Team(dto.id, dto.name, dto.description)

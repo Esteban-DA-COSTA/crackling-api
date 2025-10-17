@@ -15,13 +15,4 @@ class MemberEntity(id: EntityID<CompositeID>): CompositeEntity(id) {
     var team by TeamEntity.Companion referencedOn Members.team
     var role by Members.role
     val tasks by TaskEntity optionalReferrersOn Tasks.assignee
-    
-    fun toDTO(withTeam: Boolean = false): MemberDTO = MemberDTO(
-        user.toDTO(),
-        if (withTeam) team.toDTO() else null,
-        role
-    )
-    
-
-    operator fun invoke() = toDTO()
 }

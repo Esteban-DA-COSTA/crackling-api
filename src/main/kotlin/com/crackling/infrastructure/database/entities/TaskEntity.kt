@@ -15,18 +15,6 @@ class TaskEntity(id: EntityID<Int>) : IntEntity(id) {
     var team by TeamEntity.Companion referencedOn Tasks.team
     var userPoints by Tasks.userPoints
     var assignee by UserEntity optionalReferencedOn Tasks.assignee
-
-    fun toDTO(addTeam: Boolean = false, addMember: Boolean = false) = 
-        TaskDTO(
-            id.value,
-            name,
-            description,
-            completed,
-            if (addTeam) team.toDTO() else null,
-            (if (addMember) assignee?.toDTO() else null)
-        )
-    
-    operator fun invoke() = toDTO()
     
     operator fun plusAssign(points: Int) {
         this.userPoints += points
