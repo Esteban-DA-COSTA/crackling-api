@@ -42,13 +42,10 @@ class UserService(private val app: Application) {
      * @return A [UserLoggedDTO] containing the generated JWT token if the credentials are valid.
      * @throws NotFoundException If the user with specified email and password is not found.
      */
-    fun checkUser(email: String, password: String): Boolean {
-        transaction {
-            UserEntity.findById(email) ?: throw ResourceNotFoundException(email)
-        }.also { user ->
-            val hashedPassword = hashPassword(password, user.salt)
-            return hashedPassword == user.password
-        }
+    fun checkUser(email: String, password: String): User? = transaction {
+        val entity = UserEntity.findById(email) ?: throw ResourceNotFoundException(email)
+        val hashedPassword = hashPassword(password, entity.salt)
+        if (hashedPassword == entity.password) User.fromEntity(entity) else null
     }
 
     /**

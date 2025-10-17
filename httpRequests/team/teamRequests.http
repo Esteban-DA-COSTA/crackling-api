@@ -11,6 +11,10 @@ Authorization: Bearer {{token}}
 }
 
 ### Get All
+GET {{apiUrl}}/teams
+Authorization: Bearer {{token}}
+
+### Get team by ID
 @teamId = 1
-GET localhost:8080/teams/{{teamId}}
+GET {{apiUrl}}/teams/{{teamId}}
 Authorization: Bearer {{token}}

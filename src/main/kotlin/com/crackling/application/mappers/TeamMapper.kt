@@ -56,5 +56,4 @@ fun buildTeamListDto(teams: List<Team>): ListTeamDTO {
     }
 }
 
-
 fun parseTeam(dto: TeamDTO) = Team(dto.id, dto.name, dto.description)

@@ -1,5 +1,6 @@
 package com.crackling.application.api.plugins
 
+import com.crackling.application.api.routing.configureAuthRouting
 import com.crackling.application.api.routing.configureTeamRouting
 import com.crackling.infrastructure.exceptions.ResourceNotFoundException
 import io.ktor.http.*
@@ -26,11 +27,14 @@ fun Application.configureRouting() {
     }
     with(this) {
         routing {
-            configureAuthRouting()
-            authenticate {
-                configureTeamRouting()
+            context(this) {
+                configureAuthRouting()
+                authenticate {
+                    configureTeamRouting()
 //            configureMemberRouting()
 //            configureTaskRouting()
+                }
+
             }
         }
 

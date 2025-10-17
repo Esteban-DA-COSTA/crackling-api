@@ -8,6 +8,7 @@ import com.crackling.domain.models.User
 import io.ktor.server.resources.href
 import com.crackling.application.api.resources.HttpVerb.*
 import com.crackling.application.api.resources.TeamResource
+import com.crackling.application.api.routing.payloads.UserRegisterPayload
 import io.ktor.server.application.Application
 
 
@@ -36,3 +37,9 @@ fun buildTokenDto(user: User, jwtInfo: JwtInfo): UserLoggedDTO {
         }
     }
 }
+
+fun parseUser(dto: UserRegisterPayload) = User(
+        dto.username,
+        dto.email,
+        dto.password
+    )
